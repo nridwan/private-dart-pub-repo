@@ -1,0 +1,6 @@
+/vendor
+.env
+/release
+/tmp
+debug_app.exe
+debug_app
