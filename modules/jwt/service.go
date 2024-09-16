@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	"gofiber-boilerplate/modules/config"
+	"private-pub-repo/modules/config"
 	"strconv"
 	"time"
 

@@ -2,14 +2,14 @@ package user
 
 import (
 	"context"
-	"gofiber-boilerplate/base"
-	"gofiber-boilerplate/modules/app/appmodel"
-	"gofiber-boilerplate/modules/db"
-	"gofiber-boilerplate/modules/jwt"
-	"gofiber-boilerplate/modules/monitor"
-	"gofiber-boilerplate/modules/user/userdto"
-	"gofiber-boilerplate/modules/user/usermodel"
-	"gofiber-boilerplate/utils"
+	"private-pub-repo/base"
+	"private-pub-repo/modules/app/appmodel"
+	"private-pub-repo/modules/db"
+	"private-pub-repo/modules/jwt"
+	"private-pub-repo/modules/monitor"
+	"private-pub-repo/modules/user/userdto"
+	"private-pub-repo/modules/user/usermodel"
+	"private-pub-repo/utils"
 	"sync"
 
 	"github.com/gofiber/fiber/v2"

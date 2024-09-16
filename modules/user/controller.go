@@ -1,11 +1,11 @@
 package user
 
 import (
-	"gofiber-boilerplate/modules/app"
-	"gofiber-boilerplate/modules/app/appmodel"
-	"gofiber-boilerplate/modules/jwt"
-	"gofiber-boilerplate/modules/user/userdto"
-	"gofiber-boilerplate/utils"
+	"private-pub-repo/modules/app"
+	"private-pub-repo/modules/app/appmodel"
+	"private-pub-repo/modules/jwt"
+	"private-pub-repo/modules/user/userdto"
+	"private-pub-repo/utils"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"

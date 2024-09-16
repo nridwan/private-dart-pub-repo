@@ -1,4 +1,4 @@
-module gofiber-boilerplate
+module private-pub-repo
 
 go 1.22.6
 

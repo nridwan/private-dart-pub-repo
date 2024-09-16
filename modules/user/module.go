@@ -1,12 +1,12 @@
 package user
 
 import (
-	"gofiber-boilerplate/base"
-	"gofiber-boilerplate/modules/app"
-	"gofiber-boilerplate/modules/db"
-	"gofiber-boilerplate/modules/jwt"
-	"gofiber-boilerplate/modules/monitor"
-	"gofiber-boilerplate/modules/user/usermodel"
+	"private-pub-repo/base"
+	"private-pub-repo/modules/app"
+	"private-pub-repo/modules/db"
+	"private-pub-repo/modules/jwt"
+	"private-pub-repo/modules/monitor"
+	"private-pub-repo/modules/user/usermodel"
 
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/fx"

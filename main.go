@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"gofiber-boilerplate/cmd"
 	"log"
 	"os"
+	"private-pub-repo/cmd"
 	"runtime"
 
 	"github.com/urfave/cli/v2"

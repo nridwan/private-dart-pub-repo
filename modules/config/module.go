@@ -1,8 +1,8 @@
 package config
 
 import (
-	"gofiber-boilerplate/base"
 	"log"
+	"private-pub-repo/base"
 
 	"github.com/joho/godotenv"
 	"go.uber.org/fx"

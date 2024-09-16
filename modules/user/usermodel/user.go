@@ -1,6 +1,6 @@
 package usermodel
 
-import "gofiber-boilerplate/base"
+import "private-pub-repo/base"
 
 type UserModel struct {
 	base.BaseModel

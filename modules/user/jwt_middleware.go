@@ -1,9 +1,9 @@
 package user
 
 import (
-	"gofiber-boilerplate/modules/jwt"
-	"gofiber-boilerplate/modules/monitor"
-	"gofiber-boilerplate/utils"
+	"private-pub-repo/modules/jwt"
+	"private-pub-repo/modules/monitor"
+	"private-pub-repo/utils"
 
 	"github.com/gofiber/fiber/v2"
 )

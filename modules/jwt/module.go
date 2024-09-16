@@ -1,9 +1,9 @@
 package jwt
 
 import (
-	"gofiber-boilerplate/base"
-	"gofiber-boilerplate/modules/app"
-	"gofiber-boilerplate/modules/config"
+	"private-pub-repo/base"
+	"private-pub-repo/modules/app"
+	"private-pub-repo/modules/config"
 	"time"
 
 	"github.com/gofiber/fiber/v2"

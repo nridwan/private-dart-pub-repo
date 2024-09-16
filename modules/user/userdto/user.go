@@ -1,7 +1,7 @@
 package userdto
 
 import (
-	"gofiber-boilerplate/modules/user/usermodel"
+	"private-pub-repo/modules/user/usermodel"
 	"time"
 
 	"github.com/google/uuid"

@@ -1,16 +1,16 @@
 package cmd
 
 import (
-	"gofiber-boilerplate/base"
-	"gofiber-boilerplate/modules/app"
-	"gofiber-boilerplate/modules/config"
-	"gofiber-boilerplate/modules/db"
-	"gofiber-boilerplate/modules/jwt"
-	"gofiber-boilerplate/modules/monitor"
-	"gofiber-boilerplate/modules/user"
 	"log"
 	"os"
 	"os/signal"
+	"private-pub-repo/base"
+	"private-pub-repo/modules/app"
+	"private-pub-repo/modules/config"
+	"private-pub-repo/modules/db"
+	"private-pub-repo/modules/jwt"
+	"private-pub-repo/modules/monitor"
+	"private-pub-repo/modules/user"
 	"syscall"
 
 	"github.com/gofiber/fiber/v2"

@@ -2,8 +2,8 @@ package app
 
 import (
 	"fmt"
-	"gofiber-boilerplate/modules/app/appmodel"
-	"gofiber-boilerplate/modules/config"
+	"private-pub-repo/modules/app/appmodel"
+	"private-pub-repo/modules/config"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"

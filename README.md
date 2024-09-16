@@ -1,16 +1,12 @@
-# Gorm Fiber Boilerplate
+# Private Dart Pub Repo
 
-Boilerplate of web server using Go Fiber and Gorm.
-Features:
+Implementation of [Dart Pub Repository Spec V2](https://github.com/dart-lang/pub/blob/master/doc/repository-spec-v2.md) written in Golang.
 
-- Graceful shutdown
-- Dependency Injection (manual & Fx)
-- .env based config
-- Hot Reload
-- Gorm database model
-- JWT auth
-- Atlas Migration
-- OpenTelemetry
+What will this cover:
+
+- able to upload pub library to custom remote server
+- able to authenticate before downloading pub library as dependency
+- enable both server token management and user token management
 
 ## Requirement
 

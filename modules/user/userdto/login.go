@@ -1,7 +1,7 @@
 package userdto
 
 import (
-	"gofiber-boilerplate/modules/jwt"
+	"private-pub-repo/modules/jwt"
 )
 
 type LoginDTO struct {

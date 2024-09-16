@@ -1,6 +1,6 @@
 package userdto
 
-import "gofiber-boilerplate/modules/user/usermodel"
+import "private-pub-repo/modules/user/usermodel"
 
 type RegisterDTO struct {
 	Name     string `json:"name" validate:"required"`

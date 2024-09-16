@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"gofiber-boilerplate/modules/user/usermodel"
 	"io"
 	"os"
+	"private-pub-repo/modules/user/usermodel"
 
 	"ariga.io/atlas-provider-gorm/gormschema"
 )

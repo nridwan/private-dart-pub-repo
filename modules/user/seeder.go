@@ -1,8 +1,8 @@
 package user
 
 import (
-	"gofiber-boilerplate/base"
-	"gofiber-boilerplate/modules/user/usermodel"
+	"private-pub-repo/base"
+	"private-pub-repo/modules/user/usermodel"
 
 	"github.com/google/uuid"
 )

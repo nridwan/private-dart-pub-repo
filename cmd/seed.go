@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"context"
-	"gofiber-boilerplate/modules/app"
-	"gofiber-boilerplate/modules/config"
-	"gofiber-boilerplate/modules/db"
-	"gofiber-boilerplate/modules/jwt"
-	"gofiber-boilerplate/modules/user"
 	"os"
+	"private-pub-repo/modules/app"
+	"private-pub-repo/modules/config"
+	"private-pub-repo/modules/db"
+	"private-pub-repo/modules/jwt"
+	"private-pub-repo/modules/user"
 
 	"github.com/urfave/cli/v2"
 	"go.uber.org/fx"

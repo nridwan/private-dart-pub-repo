@@ -1,8 +1,8 @@
 package app
 
 import (
-	"gofiber-boilerplate/base"
-	"gofiber-boilerplate/modules/config"
+	"private-pub-repo/base"
+	"private-pub-repo/modules/config"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
