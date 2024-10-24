@@ -47,7 +47,7 @@ func (controller *userController) handleCreate(ctx *fiber.Ctx) error {
 		return fiber.NewError(400, err.Error())
 	}
 
-	return controller.responseService.SendSuccessResponse(ctx, 201, model)
+	return controller.responseService.SendSuccessDetailResponse(ctx, 201, model)
 }
 
 func (controller *userController) handleLogin(ctx *fiber.Ctx) error {
@@ -64,7 +64,7 @@ func (controller *userController) handleLogin(ctx *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(400, err.Error())
 	}
-	return controller.responseService.SendSuccessResponse(ctx, 200, response)
+	return controller.responseService.SendSuccessDetailResponse(ctx, 200, response)
 }
 
 func (controller *userController) handleProfile(ctx *fiber.Ctx) error {
@@ -83,7 +83,7 @@ func (controller *userController) handleProfile(ctx *fiber.Ctx) error {
 
 	user.CreatedAt = nil
 
-	return controller.responseService.SendSuccessResponse(ctx, 200, user)
+	return controller.responseService.SendSuccessDetailResponse(ctx, 200, user)
 }
 
 func (controller *userController) handleRefresh(ctx *fiber.Ctx) error {
@@ -96,7 +96,7 @@ func (controller *userController) handleRefresh(ctx *fiber.Ctx) error {
 		return fiber.NewError(400, err.Error())
 	}
 
-	return controller.responseService.SendSuccessResponse(ctx, 200, user)
+	return controller.responseService.SendSuccessDetailResponse(ctx, 200, user)
 }
 
 func (controller *userController) handleList(ctx *fiber.Ctx) error {
@@ -130,7 +130,7 @@ func (controller *userController) handleDetail(ctx *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(400, err.Error())
 	}
-	return controller.responseService.SendSuccessResponse(ctx, 200, user)
+	return controller.responseService.SendSuccessDetailResponse(ctx, 200, user)
 }
 
 func (controller *userController) handleUpdate(ctx *fiber.Ctx) error {
@@ -153,7 +153,7 @@ func (controller *userController) handleUpdate(ctx *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(400, err.Error())
 	}
-	return controller.responseService.SendSuccessResponse(ctx, 200, user)
+	return controller.responseService.SendSuccessDetailResponse(ctx, 200, user)
 }
 
 func (controller *userController) handleDelete(ctx *fiber.Ctx) error {
@@ -168,7 +168,7 @@ func (controller *userController) handleDelete(ctx *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(400, err.Error())
 	}
-	return controller.responseService.SendSuccessResponse(ctx, 200, nil)
+	return controller.responseService.SendSuccessDetailResponse(ctx, 200, nil)
 }
 
 // handlers end

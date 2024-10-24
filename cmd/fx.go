@@ -8,6 +8,7 @@ import (
 	"private-pub-repo/modules/db"
 	"private-pub-repo/modules/jwt"
 	"private-pub-repo/modules/monitor"
+	"private-pub-repo/modules/pubtoken"
 	"private-pub-repo/modules/user"
 
 	"github.com/gofiber/fiber/v2"
@@ -34,6 +35,7 @@ func runFx() {
 		db.FxModule,
 		jwt.FxModule,
 		user.FxModule,
+		pubtoken.FxModule,
 		fx.Invoke(registerWebServer),
 	)
 

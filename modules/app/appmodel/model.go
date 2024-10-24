@@ -36,3 +36,7 @@ type PaginationResponseList struct {
 type PaginationResponse struct {
 	List *PaginationResponseList `json:"list"`
 }
+
+type DetailResponse struct {
+	Detail interface{} `json:"detail"`
+}

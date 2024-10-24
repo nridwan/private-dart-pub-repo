@@ -23,6 +23,7 @@ type JwtService interface {
 	GetHandler() fiber.Handler
 	Refresh(claims JwtClaim) (*JWTTokenModel, error)
 	GenerateToken(id uuid.UUID, issuer string, payload map[string]interface{}) (*JWTTokenModel, error)
+	GenerateAccessTokenTimed(id uuid.UUID, issuer string, now int64, payload map[string]interface{}, expiredAt *time.Time) (string, error)
 }
 
 func (service *JwtModule) errorHandler(ctx *fiber.Ctx, err error) error {
@@ -99,7 +100,7 @@ func (service *JwtModule) GenerateToken(id uuid.UUID, issuer string, payload map
 	}, nil
 }
 
-func (service *JwtModule) generateAccessToken(id uuid.UUID, issuer string, now int64, payload map[string]interface{}) (string, error) {
+func (service *JwtModule) GenerateAccessTokenTimed(id uuid.UUID, issuer string, now int64, payload map[string]interface{}, expiredAt *time.Time) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	// Set claims
 	claims := token.Claims.(JwtClaim)
@@ -109,11 +110,16 @@ func (service *JwtModule) generateAccessToken(id uuid.UUID, issuer string, now i
 	claims["sub"] = id
 	claims["iat"] = now
 	claims["nbf"] = now
-	claims["exp"] = time.Unix(now, 0).Add(time.Minute * service.lifetime).Unix()
+	claims["exp"] = expiredAt.Unix()
 	claims["iss"] = issuer
 	claims["aud"] = []string{JwtAppAud}
 	// Generate encoded token and send it as response.
 	return token.SignedString([]byte(service.GetSecret()))
+}
+
+func (service *JwtModule) generateAccessToken(id uuid.UUID, issuer string, now int64, payload map[string]interface{}) (string, error) {
+	expiredAt := time.Unix(now, 0).Add(time.Minute * service.lifetime)
+	return service.GenerateAccessTokenTimed(id, issuer, now, payload, &expiredAt)
 }
 
 func (service *JwtModule) generateRefreshToken(id uuid.UUID, issuer string, now int64, payload map[string]interface{}) (string, error) {

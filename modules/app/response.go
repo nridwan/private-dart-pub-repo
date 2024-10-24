@@ -21,6 +21,7 @@ type ResponseService interface {
 	SendValidationErrorResponse(ctx *fiber.Ctx, code int, message string, errors validator.ValidationErrors) error
 	SendResponse(ctx *fiber.Ctx, code int, status string, result interface{}) error
 	SendSuccessResponse(ctx *fiber.Ctx, code int, result interface{}) error
+	SendSuccessDetailResponse(ctx *fiber.Ctx, code int, result interface{}) error
 	ErrorHandler(ctx *fiber.Ctx, err error) error
 }
 
@@ -87,6 +88,12 @@ func (service *responseServiceImpl) SendResponse(ctx *fiber.Ctx, code int, statu
 
 func (service *responseServiceImpl) SendSuccessResponse(ctx *fiber.Ctx, code int, result interface{}) error {
 	return service.SendResponse(ctx, 200, StatusSuccess, result)
+}
+
+func (service *responseServiceImpl) SendSuccessDetailResponse(ctx *fiber.Ctx, code int, detail interface{}) error {
+	return service.SendResponse(ctx, 200, StatusSuccess, appmodel.DetailResponse{
+		Detail: detail,
+	})
 }
 
 // ErrorHandler check if connection should be continued or not
