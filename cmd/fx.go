@@ -8,6 +8,7 @@ import (
 	"private-pub-repo/modules/db"
 	"private-pub-repo/modules/jwt"
 	"private-pub-repo/modules/monitor"
+	"private-pub-repo/modules/pub"
 	"private-pub-repo/modules/pubtoken"
 	"private-pub-repo/modules/user"
 
@@ -36,6 +37,7 @@ func runFx() {
 		jwt.FxModule,
 		user.FxModule,
 		pubtoken.FxModule,
+		pub.FxModule,
 		fx.Invoke(registerWebServer),
 	)
 

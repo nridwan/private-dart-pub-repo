@@ -10,6 +10,7 @@ import (
 	"private-pub-repo/modules/db"
 	"private-pub-repo/modules/jwt"
 	"private-pub-repo/modules/monitor"
+	"private-pub-repo/modules/pub"
 	"private-pub-repo/modules/pubtoken"
 	"private-pub-repo/modules/user"
 	"syscall"
@@ -37,6 +38,7 @@ func runManual() {
 	jwtModule := jwt.SetupModule(appModule, configModule)
 	userModule := user.SetupModule(appModule, dbModule, jwtModule, monitorModule)
 	pubTokenModule := pubtoken.SetupModule(appModule, dbModule, userModule, jwtModule, monitorModule)
+	pubModule := pub.SetupModule(appModule, dbModule, jwtModule, pubTokenModule, monitorModule, configModule)
 
 	modules := []base.BaseModule{
 		configModule,
@@ -46,6 +48,7 @@ func runManual() {
 		jwtModule,
 		userModule,
 		pubTokenModule,
+		pubModule,
 	}
 
 	for i := range modules {
