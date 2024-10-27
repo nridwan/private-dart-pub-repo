@@ -4,6 +4,7 @@ import (
 	"private-pub-repo/modules/app"
 	"private-pub-repo/modules/pubtoken"
 	"private-pub-repo/utils"
+	"strconv"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -57,42 +58,37 @@ func (controller *pubController) handleVersionDetail(ctx *fiber.Ctx) error {
 }
 
 func (controller *pubController) handleGetUploadUrl(ctx *fiber.Ctx) error {
-	packageName := ctx.Params("package")
-	version := ctx.Params("version")
-
-	result, err := controller.service.VersionDetail(ctx.UserContext(), packageName, version, ctx.BaseURL(), false)
-
-	if err != nil {
-		return controller.handleControllerError(ctx, "api/packages/"+packageName+"/versions/"+version, err)
-	}
-
-	return ctx.Status(200).JSON(result, "application/vnd.pub.v2+json")
+	return ctx.Status(200).JSON(map[string]interface{}{
+		"url":    ctx.BaseURL() + "/" + uploadUrlPath,
+		"fields": map[string]interface{}{},
+	}, "application/vnd.pub.v2+json")
 }
 
 func (controller *pubController) handleDoUpload(ctx *fiber.Ctx) error {
-	packageName := ctx.Params("package")
-	version := ctx.Params("version")
-
-	result, err := controller.service.VersionDetail(ctx.UserContext(), packageName, version, ctx.BaseURL(), false)
-
-	if err != nil {
-		return controller.handleControllerError(ctx, "api/packages/"+packageName+"/versions/"+version, err)
-	}
-
-	return ctx.Status(200).JSON(result, "application/vnd.pub.v2+json")
+	//open "file" multipart
+	//extract tar.gz, read "pubspec.yaml", "changelog.md", "readme.md"
+	//upload tar.gz
+	//save package (if not exist) and version to db
+	return ctx.Redirect(ctx.BaseURL()+"/"+finishUploadUrlPath, fiber.StatusFound)
 }
 
 func (controller *pubController) handleFinishUpload(ctx *fiber.Ctx) error {
-	packageName := ctx.Params("package")
-	version := ctx.Params("version")
+	errorMsg := ctx.Query("error")
 
-	result, err := controller.service.VersionDetail(ctx.UserContext(), packageName, version, ctx.BaseURL(), false)
-
-	if err != nil {
-		return controller.handleControllerError(ctx, "api/packages/"+packageName+"/versions/"+version, err)
+	if errorMsg != "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
+			"error": map[string]interface{}{
+				"code":    strconv.Itoa(fiber.StatusBadRequest),
+				"message": errorMsg,
+			},
+		}, "application/vnd.pub.v2+json")
 	}
 
-	return ctx.Status(200).JSON(result, "application/vnd.pub.v2+json")
+	return ctx.JSON(map[string]interface{}{
+		"success": map[string]interface{}{
+			"message": "Successfully uploaded package.",
+		},
+	}, "application/vnd.pub.v2+json")
 }
 
 // handlers end
@@ -100,28 +96,28 @@ func (controller *pubController) handleFinishUpload(ctx *fiber.Ctx) error {
 func (controller *pubController) handleControllerError(ctx *fiber.Ctx, currentPath string, err error) error {
 	if err == fiber.ErrNotFound {
 		if url := controller.service.GetUpstreamUrl(currentPath); url != nil {
-			ctx.Redirect(*url, 302)
+			ctx.Redirect(*url, fiber.StatusFound)
 		}
-		return ctx.Status(404).JSON(map[string]interface{}{
+		return ctx.Status(fiber.StatusNotFound).JSON(map[string]interface{}{
 			"error": map[string]interface{}{
-				"code":    "404",
+				"code":    strconv.Itoa(fiber.StatusNotFound),
 				"message": "Not Found",
 			},
 		}, "application/vnd.pub.v2+json")
 	}
 
 	if err == fiber.ErrForbidden {
-		return ctx.Status(403).JSON(map[string]interface{}{
+		return ctx.Status(fiber.StatusForbidden).JSON(map[string]interface{}{
 			"error": map[string]interface{}{
-				"code":    "403",
+				"code":    strconv.Itoa(fiber.StatusForbidden),
 				"message": "Forbidden",
 			},
 		}, "application/vnd.pub.v2+json")
 	}
 
-	return ctx.Status(500).JSON(map[string]interface{}{
+	return ctx.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
 		"error": map[string]interface{}{
-			"code":    "500",
+			"code":    strconv.Itoa(fiber.StatusBadRequest),
 			"message": err.Error(),
 		},
 	}, "application/vnd.pub.v2+json")

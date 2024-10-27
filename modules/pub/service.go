@@ -58,11 +58,14 @@ func (service *pubServiceImpl) VersionList(context context.Context, packageName 
 		return nil, fiber.ErrForbidden
 	}
 
-	service.db.WithContext(spanContext).Model(pubVersions).Where("package_name = ?", packageName).Order(clause.OrderBy{Columns: []clause.OrderByColumn{
-		{Column: clause.Column{Name: "version_number_major"}, Desc: true},
-		{Column: clause.Column{Name: "version_number_minor"}, Desc: true},
-		{Column: clause.Column{Name: "version_number_patch"}, Desc: true},
-	}}).Find(&pubVersions)
+	service.db.WithContext(spanContext).Model(pubVersions).
+		Select("package_name", "version", "pubspec").
+		Where("package_name = ?", packageName).
+		Order(clause.OrderBy{Columns: []clause.OrderByColumn{
+			{Column: clause.Column{Name: "version_number_major"}, Desc: true},
+			{Column: clause.Column{Name: "version_number_minor"}, Desc: true},
+			{Column: clause.Column{Name: "version_number_patch"}, Desc: true},
+		}}).Find(&pubVersions)
 
 	if len(pubVersions) > 0 {
 		pubDTO := pubdto.MapPubVersionsToPackageDTO(pubVersions, baseUrl)
@@ -89,6 +92,7 @@ func (service *pubServiceImpl) VersionDetail(context context.Context, packageNam
 	}
 
 	result = service.db.WithContext(spanContext).Model(pubVersion).
+		Select("package_name", "version", "pubspec").
 		Where("package_name = ?", packageName).
 		Where("version = ?", version).
 		First(&pubVersion)
