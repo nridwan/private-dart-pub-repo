@@ -20,6 +20,7 @@ type JwtModule struct {
 	refreshLifetime time.Duration
 	secret          string
 	handler         fiber.Handler
+	optionalHandler fiber.Handler
 }
 
 func NewModule(config config.ConfigService, responseService app.ResponseService) *JwtModule {

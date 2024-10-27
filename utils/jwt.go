@@ -16,6 +16,23 @@ func GetFiberJwtUserIdString(c *fiber.Ctx) (id string, err error) {
 	return GetFiberJwtClaims(c).GetSubject()
 }
 
+func HasJwt(c *fiber.Ctx) bool {
+	_, ok := c.Locals("user").(*jwt.Token)
+	return ok
+}
+
+func IsFiberJwtUserAdmin(c *fiber.Ctx) bool {
+	raw, ok := GetFiberJwtClaims(c)["is_admin"]
+
+	if !ok {
+		return false
+	}
+
+	result, ok := raw.(bool)
+
+	return ok && result
+}
+
 func GetFiberJwtUserId(c *fiber.Ctx) (id uuid.UUID, err error) {
 	idString, err := GetFiberJwtUserIdString(c)
 	if err != nil {

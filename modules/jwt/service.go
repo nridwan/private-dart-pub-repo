@@ -21,6 +21,7 @@ type JwtService interface {
 	Init(config config.ConfigService)
 	GetSecret() string
 	GetHandler() fiber.Handler
+	GetOptionalHandler() fiber.Handler
 	Refresh(claims JwtClaim) (*JWTTokenModel, error)
 	GenerateToken(id uuid.UUID, issuer string, payload map[string]interface{}) (*JWTTokenModel, error)
 	GenerateAccessTokenTimed(id uuid.UUID, issuer string, now int64, payload map[string]interface{}, expiredAt *time.Time) (string, error)
@@ -39,6 +40,10 @@ func (service *JwtModule) Init(config config.ConfigService) {
 		SigningKey:   jwtware.SigningKey{Key: []byte(service.secret)},
 		ErrorHandler: service.errorHandler,
 	})
+	service.optionalHandler = jwtware.New(jwtware.Config{
+		SigningKey:   jwtware.SigningKey{Key: []byte(service.secret)},
+		ErrorHandler: func(c *fiber.Ctx, err error) error { return nil },
+	})
 	if localLifetime, err := strconv.Atoi(config.Getenv("JWT_TOKEN_LIFETIME", "1")); err == nil {
 		service.lifetime = time.Duration(localLifetime)
 	}
@@ -53,6 +58,10 @@ func (service *JwtModule) GetSecret() string {
 
 func (service *JwtModule) GetHandler() fiber.Handler {
 	return service.handler
+}
+
+func (service *JwtModule) GetOptionalHandler() fiber.Handler {
+	return service.optionalHandler
 }
 
 func (service *JwtModule) Refresh(claims JwtClaim) (*JWTTokenModel, error) {

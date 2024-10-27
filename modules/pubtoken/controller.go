@@ -48,7 +48,7 @@ func (controller *pubTokenController) handleCreate(ctx *fiber.Ctx) error {
 		return controller.responseService.SendValidationErrorResponse(ctx, 400, validationError, err.(validator.ValidationErrors))
 	}
 
-	token, err := controller.service.Insert(ctx.UserContext(), request.ToModel(id))
+	token, err := controller.service.Insert(ctx.UserContext(), request.ToModel(id, utils.IsFiberJwtUserAdmin(ctx)))
 
 	if err != nil {
 		return fiber.NewError(400, err.Error())
@@ -83,12 +83,12 @@ func (controller *pubTokenController) handleDetail(ctx *fiber.Ctx) error {
 		return fiber.NewError(400, err.Error())
 	}
 
-	user, err := controller.service.Detail(ctx.UserContext(), userId)
+	pubToken, err := controller.service.Detail(ctx.UserContext(), userId)
 
 	if err != nil {
 		return fiber.NewError(400, err.Error())
 	}
-	return controller.responseService.SendSuccessDetailResponse(ctx, 200, user)
+	return controller.responseService.SendSuccessDetailResponse(ctx, 200, pubToken)
 }
 
 func (controller *pubTokenController) handleDelete(ctx *fiber.Ctx) error {

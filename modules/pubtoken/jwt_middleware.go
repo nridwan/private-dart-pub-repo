@@ -12,7 +12,6 @@ import (
 
 type PubTokenJwtMiddleware interface {
 	jwt.JwtMiddleware
-	CanRead(c *fiber.Ctx) error
 	CanWrite(c *fiber.Ctx) error
 }
 
@@ -22,7 +21,7 @@ type pubTokenMiddlewareImpl struct {
 	monitorService  monitor.MonitorService
 }
 
-func NewUserJwtMiddleware(jwtService jwt.JwtService, pubTokenService PubTokenService, monitorService monitor.MonitorService) PubTokenJwtMiddleware {
+func NewPubTokenJwtMiddleware(jwtService jwt.JwtService, pubTokenService PubTokenService, monitorService monitor.MonitorService) PubTokenJwtMiddleware {
 	return &pubTokenMiddlewareImpl{
 		jwtService:      jwtService,
 		pubTokenService: pubTokenService,
@@ -30,15 +29,7 @@ func NewUserJwtMiddleware(jwtService jwt.JwtService, pubTokenService PubTokenSer
 	}
 }
 
-// impl `UserJwtMiddleware` start
-
-func (service *pubTokenMiddlewareImpl) CanRead(c *fiber.Ctx) error {
-	if c.Locals("read") != true {
-		return fiber.NewError(401, "Unauthenticated")
-	}
-
-	return c.Next()
-}
+// impl `PubTokenJwtMiddleware` start
 
 func (service *pubTokenMiddlewareImpl) CanWrite(c *fiber.Ctx) error {
 	if c.Locals("write") != true {
@@ -48,12 +39,12 @@ func (service *pubTokenMiddlewareImpl) CanWrite(c *fiber.Ctx) error {
 	return c.Next()
 }
 
-// impl `UserJwtMiddleware` end
+// impl `PubTokenJwtMiddleware` end
 
 // impl `jwt.JwtMiddleware` start
 
 func (service *pubTokenMiddlewareImpl) CanAccess(c *fiber.Ctx) error {
-	err := service.jwtService.CanAccess(c, jwtIssuer)
+	err := service.jwtService.CanAccess(c, JwtIssuer)
 
 	if err == nil {
 		var pubTokenIdString string
@@ -70,7 +61,6 @@ func (service *pubTokenMiddlewareImpl) CanAccess(c *fiber.Ctx) error {
 			pubToken, err = service.pubTokenService.Detail(c.UserContext(), pubTokenId)
 
 			if err == nil {
-				c.Locals("read", pubToken.Read)
 				c.Locals("write", pubToken.Write)
 			}
 		}

@@ -34,8 +34,10 @@ func (service *responseServiceImpl) generateResponseCode(code int) *string {
 	return &responseCode
 }
 
-func NewResponseService() ResponseService {
-	return &responseServiceImpl{}
+func NewResponseService(config config.ConfigService) ResponseService {
+	return &responseServiceImpl{
+		appName: config.Getenv("APP_CODE", "APP"),
+	}
 }
 
 // impl `ResponseService` start

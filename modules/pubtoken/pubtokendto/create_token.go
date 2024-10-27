@@ -14,14 +14,13 @@ type CreateTokenDTO struct {
 	ExpiredAt string `json:"expired_at" validate:"required,datetime=2006-01-02"`
 }
 
-func (dto *CreateTokenDTO) ToModel(userId uuid.UUID) *pubtokenmodel.PubTokenModel {
+func (dto *CreateTokenDTO) ToModel(userId uuid.UUID, isAdmin bool) *pubtokenmodel.PubTokenModel {
 	expiredAt, _ := time.Parse("2006-01-02", dto.ExpiredAt)
 
 	return &pubtokenmodel.PubTokenModel{
 		Remarks:   dto.Remarks,
-		Read:      dto.Read,
-		Write:     dto.Write,
+		Write:     isAdmin && dto.Write,
 		ExpiredAt: &expiredAt,
-		UserID:    userId,
+		UserID:    &userId,
 	}
 }

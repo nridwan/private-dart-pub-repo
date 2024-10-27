@@ -12,6 +12,10 @@ type ConfigModule struct {
 }
 
 func NewModule() *ConfigModule {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	return &ConfigModule{}
 }
 
@@ -32,11 +36,6 @@ var FxModule = fx.Module("Config", fx.Provide(NewModule), fx.Provide(ProvideServ
 // implements `BaseModule` of `base/module.go` start
 
 func (module *ConfigModule) OnStart() error {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
 	return nil
 }
 

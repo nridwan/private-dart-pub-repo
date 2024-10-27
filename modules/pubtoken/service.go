@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	jwtIssuer = "pubToken"
+	JwtIssuer = "pubToken"
 )
 
 type PubTokenService interface {
@@ -56,7 +56,7 @@ func (service *pubTokenServiceImpl) Insert(context context.Context, pubToken *pu
 		return nil, result.Error
 	}
 
-	response, err := service.jwtService.GenerateAccessTokenTimed(pubToken.ID, jwtIssuer, time.Now().Unix(), map[string]interface{}{}, pubToken.ExpiredAt)
+	response, err := service.jwtService.GenerateAccessTokenTimed(pubToken.ID, JwtIssuer, time.Now().Unix(), map[string]interface{}{}, pubToken.ExpiredAt)
 	return &response, err
 }
 
