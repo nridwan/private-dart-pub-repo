@@ -1,6 +1,7 @@
 package pubdto
 
 import (
+	"encoding/json"
 	"fmt"
 	"private-pub-repo/modules/pub/pubmodel"
 )
@@ -12,10 +13,14 @@ type PubVersionDTO struct {
 }
 
 func MapPubVersionToDTO(model *pubmodel.PubVersionModel, baseUrl string) PubVersionDTO {
-	archiveUrl := fmt.Sprintf("%s/packages/%s/versions/%s.tar.gz", baseUrl, model.PackageName, model.Version)
+	archiveUrl := fmt.Sprintf("%s/v1/pub/packages/%s/versions/%s.tar.gz", baseUrl, model.PackageName, model.Version)
+
+	var pubspec map[string]interface{}
+	json.Unmarshal([]byte(model.Pubspec), &pubspec) // Convert JSON to map
+
 	return PubVersionDTO{
 		Version:    model.Version,
 		ArchiveUrl: archiveUrl,
-		Pubspec:    model.Pubspec,
+		Pubspec:    pubspec,
 	}
 }

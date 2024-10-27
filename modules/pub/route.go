@@ -1,12 +1,14 @@
 package pub
 
 const (
-	basePath            = "v1/pub/api/packages"
-	versionListPath     = basePath + "/:package"
+	basePath            = "v1/pub/packages"
+	apiPath             = "v1/pub/api/packages"
+	versionListPath     = apiPath + "/:package"
 	versionDetailPath   = versionListPath + "/versions/:version"
-	getUploadUrlPath    = basePath + "/versions/new"
-	uploadUrlPath       = basePath + "/versions/newUpload"
-	finishUploadUrlPath = basePath + "/versions/newUploadFinish"
+	getUploadUrlPath    = apiPath + "/versions/new"
+	uploadUrlPath       = apiPath + "/versions/newUpload"
+	finishUploadUrlPath = apiPath + "/versions/newUploadFinish"
+	downloadPath        = basePath + "/:package/versions/:version.tar.gz"
 )
 
 func (module *PubModule) registerRoutes() {
@@ -15,4 +17,5 @@ func (module *PubModule) registerRoutes() {
 	module.app.Get(finishUploadUrlPath, module.jwtService.GetHandler(), module.middleware.CanAccess, module.middleware.CanWrite, module.controller.handleFinishUpload)
 	module.app.Get(versionListPath, module.jwtService.GetOptionalHandler(), module.controller.handleVersionList)
 	module.app.Get(versionDetailPath, module.jwtService.GetOptionalHandler(), module.controller.handleVersionDetail)
+	module.app.Get(downloadPath, module.jwtService.GetOptionalHandler(), module.controller.handleVersionDetail)
 }

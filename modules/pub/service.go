@@ -48,13 +48,13 @@ func (service *pubServiceImpl) VersionList(context context.Context, packageName 
 	pubPackage := pubmodel.PubPackageModel{}
 	pubVersions := []pubmodel.PubVersionModel{}
 
-	result := service.db.WithContext(spanContext).First(&pubPackage, packageName)
+	result := service.db.WithContext(spanContext).First(&pubPackage, "name = ?", packageName)
 
 	if result.Error != nil {
 		return nil, fiber.ErrNotFound
 	}
 
-	if pubPackage.Private && !publicOnly {
+	if pubPackage.Private && publicOnly {
 		return nil, fiber.ErrForbidden
 	}
 
@@ -81,13 +81,13 @@ func (service *pubServiceImpl) VersionDetail(context context.Context, packageNam
 	pubPackage := pubmodel.PubPackageModel{}
 	pubVersion := pubmodel.PubVersionModel{}
 
-	result := service.db.WithContext(spanContext).First(&pubPackage, packageName)
+	result := service.db.WithContext(spanContext).First(&pubPackage, "name = ?", packageName)
 
 	if result.Error != nil {
 		return nil, fiber.ErrNotFound
 	}
 
-	if pubPackage.Private && !publicOnly {
+	if pubPackage.Private && publicOnly {
 		return nil, fiber.ErrForbidden
 	}
 

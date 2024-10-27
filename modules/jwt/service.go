@@ -42,7 +42,7 @@ func (service *JwtModule) Init(config config.ConfigService) {
 	})
 	service.optionalHandler = jwtware.New(jwtware.Config{
 		SigningKey:   jwtware.SigningKey{Key: []byte(service.secret)},
-		ErrorHandler: func(c *fiber.Ctx, err error) error { return nil },
+		ErrorHandler: func(c *fiber.Ctx, err error) error { return c.Next() },
 	})
 	if localLifetime, err := strconv.Atoi(config.Getenv("JWT_TOKEN_LIFETIME", "1")); err == nil {
 		service.lifetime = time.Duration(localLifetime)
