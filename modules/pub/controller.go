@@ -38,7 +38,7 @@ func (controller *pubController) handleVersionList(ctx *fiber.Ctx) error {
 		return controller.handleControllerError(ctx, "api/packages/"+packageName, err)
 	}
 
-	return controller.responseService.SendSuccessDetailResponse(ctx, 200, result)
+	return ctx.Status(200).JSON(result, "application/vnd.pub.v2+json")
 }
 
 func (controller *pubController) handleVersionDetail(ctx *fiber.Ctx) error {
@@ -53,7 +53,7 @@ func (controller *pubController) handleVersionDetail(ctx *fiber.Ctx) error {
 		return controller.handleControllerError(ctx, "api/packages/"+packageName+"/versions/"+version, err)
 	}
 
-	return controller.responseService.SendSuccessDetailResponse(ctx, 200, result)
+	return ctx.Status(200).JSON(result, "application/vnd.pub.v2+json")
 }
 
 func (controller *pubController) handleGetUploadUrl(ctx *fiber.Ctx) error {
@@ -66,7 +66,7 @@ func (controller *pubController) handleGetUploadUrl(ctx *fiber.Ctx) error {
 		return controller.handleControllerError(ctx, "api/packages/"+packageName+"/versions/"+version, err)
 	}
 
-	return controller.responseService.SendSuccessDetailResponse(ctx, 200, result)
+	return ctx.Status(200).JSON(result, "application/vnd.pub.v2+json")
 }
 
 func (controller *pubController) handleDoUpload(ctx *fiber.Ctx) error {
@@ -79,7 +79,7 @@ func (controller *pubController) handleDoUpload(ctx *fiber.Ctx) error {
 		return controller.handleControllerError(ctx, "api/packages/"+packageName+"/versions/"+version, err)
 	}
 
-	return controller.responseService.SendSuccessDetailResponse(ctx, 200, result)
+	return ctx.Status(200).JSON(result, "application/vnd.pub.v2+json")
 }
 
 func (controller *pubController) handleFinishUpload(ctx *fiber.Ctx) error {
@@ -92,7 +92,7 @@ func (controller *pubController) handleFinishUpload(ctx *fiber.Ctx) error {
 		return controller.handleControllerError(ctx, "api/packages/"+packageName+"/versions/"+version, err)
 	}
 
-	return controller.responseService.SendSuccessDetailResponse(ctx, 200, result)
+	return ctx.Status(200).JSON(result, "application/vnd.pub.v2+json")
 }
 
 // handlers end
@@ -107,7 +107,7 @@ func (controller *pubController) handleControllerError(ctx *fiber.Ctx, currentPa
 				"code":    "404",
 				"message": "Not Found",
 			},
-		})
+		}, "application/vnd.pub.v2+json")
 	}
 
 	if err == fiber.ErrForbidden {
@@ -116,7 +116,7 @@ func (controller *pubController) handleControllerError(ctx *fiber.Ctx, currentPa
 				"code":    "403",
 				"message": "Forbidden",
 			},
-		})
+		}, "application/vnd.pub.v2+json")
 	}
 
 	return ctx.Status(500).JSON(map[string]interface{}{
@@ -124,5 +124,5 @@ func (controller *pubController) handleControllerError(ctx *fiber.Ctx, currentPa
 			"code":    "500",
 			"message": err.Error(),
 		},
-	})
+	}, "application/vnd.pub.v2+json")
 }
