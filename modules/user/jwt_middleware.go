@@ -46,6 +46,7 @@ func (service *userMiddlewareImpl) CanAccess(c *fiber.Ctx) error {
 		var userId string
 		if userId, err = utils.GetFiberJwtUserIdString(c); err == nil {
 			service.monitorService.SetCurrentSpanAttributes(c.UserContext(), map[string]interface{}{"admin_user_id": userId})
+			return c.Next()
 		}
 	}
 

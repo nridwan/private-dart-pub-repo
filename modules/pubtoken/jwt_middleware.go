@@ -13,6 +13,7 @@ import (
 type PubTokenJwtMiddleware interface {
 	jwt.JwtMiddleware
 	CanWrite(c *fiber.Ctx) error
+	GetPubUserId(c *fiber.Ctx) uuid.UUID
 }
 
 type pubTokenMiddlewareImpl struct {
@@ -39,6 +40,10 @@ func (service *pubTokenMiddlewareImpl) CanWrite(c *fiber.Ctx) error {
 	return c.Next()
 }
 
+func (service *pubTokenMiddlewareImpl) GetPubUserId(c *fiber.Ctx) uuid.UUID {
+	return c.Locals("pub_user_id").(uuid.UUID)
+}
+
 // impl `PubTokenJwtMiddleware` end
 
 // impl `jwt.JwtMiddleware` start
@@ -62,6 +67,8 @@ func (service *pubTokenMiddlewareImpl) CanAccess(c *fiber.Ctx) error {
 
 			if err == nil {
 				c.Locals("write", pubToken.Write)
+				c.Locals("pub_user_id", *pubToken.UserID)
+				return c.Next()
 			}
 		}
 	}

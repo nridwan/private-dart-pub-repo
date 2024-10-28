@@ -10,13 +10,12 @@ import (
 )
 
 type PubVersionModel struct {
-	PackageName        string               `json:"package_name" gorm:"not null;"`
-	Version            string               `json:"version" gorm:"not null;primaryKey;"`
-	VersionNumberMajor uint                 `json:"version_number_major" gorm:"not null;"`
-	VersionNumberMinor uint                 `json:"version_number_minor" gorm:"not null;"`
-	VersionNumberPatch uint                 `json:"version_number_patch" gorm:"not null;"`
+	PackageName        string               `json:"package_name" gorm:"not null;index:,unique,composite:pubversion;"`
+	Version            string               `json:"version" gorm:"not null;index:,unique,composite:pubversion;"`
+	VersionNumberMajor uint64               `json:"version_number_major" gorm:"not null;"`
+	VersionNumberMinor uint64               `json:"version_number_minor" gorm:"not null;"`
+	VersionNumberPatch uint64               `json:"version_number_patch" gorm:"not null;"`
 	Prerelease         bool                 `json:"prerelease" gorm:"not null;default:false;"`
-	Remarks            string               `json:"remarks" gorm:"not null;"`
 	Pubspec            datatypes.JSON       `json:"pubspec" gorm:"not null;default:'{}';"`
 	UploaderID         *uuid.UUID           `json:"user_id" gorm:"type:uuid;nullable;"`
 	Uploader           *usermodel.UserModel `gorm:"foreignKey:UploaderID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`

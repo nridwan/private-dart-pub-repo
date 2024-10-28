@@ -4,6 +4,7 @@ go 1.22.6
 
 require (
 	ariga.io/atlas-provider-gorm v0.5.0
+	github.com/Masterminds/semver/v3 v3.3.0
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/gofiber/contrib/jwt v1.0.10
 	github.com/gofiber/contrib/otelfiber/v2 v2.1.1
@@ -18,6 +19,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.29.0
 	go.uber.org/fx v1.22.2
 	golang.org/x/crypto v0.26.0
+	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/datatypes v1.2.4
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/driver/postgres v1.5.9

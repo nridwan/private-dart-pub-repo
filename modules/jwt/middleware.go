@@ -46,14 +46,14 @@ func (service *JwtModule) checkUser(c *fiber.Ctx, issuer string, refresh bool) b
 
 func (service *JwtModule) CanAccess(c *fiber.Ctx, issuer string) error {
 	if service.checkUser(c, issuer, false) {
-		return c.Next()
+		return nil
 	}
 	return fiber.NewError(401, "Unauthenticated")
 }
 
 func (service *JwtModule) CanRefresh(c *fiber.Ctx, issuer string) error {
 	if service.checkUser(c, issuer, true) {
-		return c.Next()
+		return nil
 	}
 	return fiber.NewError(401, "Unauthenticated")
 }

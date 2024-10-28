@@ -1,6 +1,7 @@
 package pub
 
 import (
+	"net/url"
 	"private-pub-repo/modules/app"
 	"private-pub-repo/modules/pubtoken"
 	"private-pub-repo/utils"
@@ -65,10 +66,18 @@ func (controller *pubController) handleGetUploadUrl(ctx *fiber.Ctx) error {
 }
 
 func (controller *pubController) handleDoUpload(ctx *fiber.Ctx) error {
-	//open "file" multipart
-	//extract tar.gz, read "pubspec.yaml", "changelog.md", "readme.md"
-	//upload tar.gz
-	//save package (if not exist) and version to db
+	// Get the uploaded file from the "file" field
+	file, err := ctx.FormFile("file")
+	if err != nil {
+		return controller.processError(ctx, fiber.StatusBadRequest, err.Error())
+	}
+
+	err = controller.service.UploadVersion(file, controller.middleware.GetPubUserId(ctx))
+
+	if err != nil {
+		return ctx.Redirect(ctx.BaseURL()+"/"+finishUploadUrlPath+"?error="+url.QueryEscape(err.Error()), fiber.StatusFound)
+	}
+
 	return ctx.Redirect(ctx.BaseURL()+"/"+finishUploadUrlPath, fiber.StatusFound)
 }
 
@@ -76,12 +85,7 @@ func (controller *pubController) handleFinishUpload(ctx *fiber.Ctx) error {
 	errorMsg := ctx.Query("error")
 
 	if errorMsg != "" {
-		return ctx.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
-			"error": map[string]interface{}{
-				"code":    strconv.Itoa(fiber.StatusBadRequest),
-				"message": errorMsg,
-			},
-		}, "application/vnd.pub.v2+json")
+		return controller.processError(ctx, fiber.StatusBadRequest, errorMsg)
 	}
 
 	return ctx.JSON(map[string]interface{}{
@@ -98,27 +102,21 @@ func (controller *pubController) handleControllerError(ctx *fiber.Ctx, currentPa
 		if url := controller.service.GetUpstreamUrl(currentPath); url != nil {
 			ctx.Redirect(*url, fiber.StatusFound)
 		}
-		return ctx.Status(fiber.StatusNotFound).JSON(map[string]interface{}{
-			"error": map[string]interface{}{
-				"code":    strconv.Itoa(fiber.StatusNotFound),
-				"message": "Not Found",
-			},
-		}, "application/vnd.pub.v2+json")
+		return controller.processError(ctx, fiber.StatusNotFound, "Not Found")
 	}
 
 	if err == fiber.ErrForbidden {
-		return ctx.Status(fiber.StatusForbidden).JSON(map[string]interface{}{
-			"error": map[string]interface{}{
-				"code":    strconv.Itoa(fiber.StatusForbidden),
-				"message": "Forbidden",
-			},
-		}, "application/vnd.pub.v2+json")
+		return controller.processError(ctx, fiber.StatusForbidden, "Forbidden")
 	}
 
-	return ctx.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
+	return controller.processError(ctx, fiber.StatusBadRequest, err.Error())
+}
+
+func (controller *pubController) processError(ctx *fiber.Ctx, status int, message string) error {
+	return ctx.Status(status).JSON(map[string]interface{}{
 		"error": map[string]interface{}{
-			"code":    strconv.Itoa(fiber.StatusBadRequest),
-			"message": err.Error(),
+			"code":    strconv.Itoa(status),
+			"message": message,
 		},
 	}, "application/vnd.pub.v2+json")
 }
