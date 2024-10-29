@@ -14,6 +14,7 @@ type PubTokenJwtMiddleware interface {
 	jwt.JwtMiddleware
 	CanWrite(c *fiber.Ctx) error
 	GetPubUserId(c *fiber.Ctx) uuid.UUID
+	HasAccess(c *fiber.Ctx) error
 }
 
 type pubTokenMiddlewareImpl struct {
@@ -46,9 +47,7 @@ func (service *pubTokenMiddlewareImpl) GetPubUserId(c *fiber.Ctx) uuid.UUID {
 
 // impl `PubTokenJwtMiddleware` end
 
-// impl `jwt.JwtMiddleware` start
-
-func (service *pubTokenMiddlewareImpl) CanAccess(c *fiber.Ctx) error {
+func (service *pubTokenMiddlewareImpl) HasAccess(c *fiber.Ctx) error {
 	err := service.jwtService.CanAccess(c, JwtIssuer)
 
 	if err == nil {
@@ -68,13 +67,25 @@ func (service *pubTokenMiddlewareImpl) CanAccess(c *fiber.Ctx) error {
 			if err == nil {
 				c.Locals("write", pubToken.Write)
 				c.Locals("pub_user_id", *pubToken.UserID)
-				return c.Next()
 			}
 		}
 	}
 
 	return err
 }
+
+// impl `jwt.JwtMiddleware` start
+
+func (service *pubTokenMiddlewareImpl) CanAccess(c *fiber.Ctx) error {
+	err := service.HasAccess(c)
+
+	if err == nil {
+		return c.Next()
+	}
+
+	return err
+}
+
 func (service *pubTokenMiddlewareImpl) CanRefresh(c *fiber.Ctx) error {
 	return fiber.NewError(401, "Unauthenticated")
 }

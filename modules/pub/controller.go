@@ -11,6 +11,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+const jsonResponseType = "application/vnd.pub.v2+json"
+
 type pubController struct {
 	service         PubService
 	responseService app.ResponseService
@@ -32,7 +34,7 @@ func newPubController(service PubService, responseService app.ResponseService, v
 func (controller *pubController) handleVersionList(ctx *fiber.Ctx) error {
 	packageName := ctx.Params("package")
 
-	publicOnly := !utils.HasJwt(ctx) || controller.middleware.CanAccess(ctx) == nil
+	publicOnly := !utils.HasJwt(ctx) || controller.middleware.HasAccess(ctx) != nil
 
 	result, err := controller.service.VersionList(ctx.UserContext(), packageName, ctx.BaseURL(), publicOnly)
 
@@ -40,14 +42,14 @@ func (controller *pubController) handleVersionList(ctx *fiber.Ctx) error {
 		return controller.handleControllerError(ctx, "api/packages/"+packageName, err)
 	}
 
-	return ctx.Status(200).JSON(result, "application/vnd.pub.v2+json")
+	return ctx.Status(200).JSON(result, jsonResponseType)
 }
 
 func (controller *pubController) handleVersionDetail(ctx *fiber.Ctx) error {
 	packageName := ctx.Params("package")
 	version := ctx.Params("version")
 
-	publicOnly := !utils.HasJwt(ctx) || controller.middleware.CanAccess(ctx) == nil
+	publicOnly := !utils.HasJwt(ctx) || controller.middleware.HasAccess(ctx) != nil
 
 	result, err := controller.service.VersionDetail(ctx.UserContext(), packageName, version, ctx.BaseURL(), publicOnly)
 
@@ -55,14 +57,14 @@ func (controller *pubController) handleVersionDetail(ctx *fiber.Ctx) error {
 		return controller.handleControllerError(ctx, "api/packages/"+packageName+"/versions/"+version, err)
 	}
 
-	return ctx.Status(200).JSON(result, "application/vnd.pub.v2+json")
+	return ctx.Status(200).JSON(result, jsonResponseType)
 }
 
 func (controller *pubController) handleGetUploadUrl(ctx *fiber.Ctx) error {
 	return ctx.Status(200).JSON(map[string]interface{}{
 		"url":    ctx.BaseURL() + "/" + uploadUrlPath,
 		"fields": map[string]interface{}{},
-	}, "application/vnd.pub.v2+json")
+	}, jsonResponseType)
 }
 
 func (controller *pubController) handleDoUpload(ctx *fiber.Ctx) error {
@@ -92,7 +94,7 @@ func (controller *pubController) handleFinishUpload(ctx *fiber.Ctx) error {
 		"success": map[string]interface{}{
 			"message": "Successfully uploaded package.",
 		},
-	}, "application/vnd.pub.v2+json")
+	}, jsonResponseType)
 }
 
 // handlers end
@@ -118,5 +120,5 @@ func (controller *pubController) processError(ctx *fiber.Ctx, status int, messag
 			"code":    strconv.Itoa(status),
 			"message": message,
 		},
-	}, "application/vnd.pub.v2+json")
+	}, jsonResponseType)
 }

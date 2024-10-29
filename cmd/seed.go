@@ -7,6 +7,7 @@ import (
 	"private-pub-repo/modules/config"
 	"private-pub-repo/modules/db"
 	"private-pub-repo/modules/jwt"
+	"private-pub-repo/modules/monitor"
 	"private-pub-repo/modules/user"
 
 	"github.com/urfave/cli/v2"
@@ -28,6 +29,7 @@ func runSeeder() {
 	fxApp := fx.New(
 		config.FxModule,
 		app.FxModule,
+		monitor.FxModule,
 		db.FxModule,
 		jwt.FxModule,
 		user.FxModule,
