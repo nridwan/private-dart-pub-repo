@@ -6,7 +6,7 @@ What will this cover:
 
 - able to upload pub library to custom remote server
 - able to authenticate before downloading pub library as dependency
-- enable both server token management and user token management
+- enable user token management
 
 ## Requirement
 
