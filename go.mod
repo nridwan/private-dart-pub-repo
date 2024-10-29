@@ -5,6 +5,7 @@ go 1.22.6
 require (
 	ariga.io/atlas-provider-gorm v0.5.0
 	github.com/Masterminds/semver/v3 v3.3.0
+	github.com/aws/aws-sdk-go v1.55.5
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/gofiber/contrib/jwt v1.0.10
 	github.com/gofiber/contrib/otelfiber/v2 v2.1.1
@@ -49,6 +50,7 @@ require (
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect

@@ -9,6 +9,7 @@ import (
 	"private-pub-repo/modules/monitor"
 	"private-pub-repo/modules/pub/pubmodel"
 	"private-pub-repo/modules/pubtoken"
+	"private-pub-repo/modules/storage"
 
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/fx"
@@ -31,13 +32,16 @@ func fxRegister(lifeCycle fx.Lifecycle, module *PubModule) {
 	base.FxRegister(module, lifeCycle)
 }
 
-func SetupModule(app *app.AppModule, db *db.DbModule, jwt *jwt.JwtModule, pubToken *pubtoken.PubTokenModule, monitor *monitor.MonitorModule, config *config.ConfigModule) *PubModule {
-	service := NewPubService(jwt, monitor.Service, config)
+func SetupModule(
+	app *app.AppModule, db *db.DbModule, jwt *jwt.JwtModule, pubToken *pubtoken.PubTokenModule,
+	monitor *monitor.MonitorModule, config *config.ConfigModule, storage *storage.StorageModule,
+) *PubModule {
+	service := NewPubService(jwt, monitor.Service, config, storage)
 	controller := newPubController(service, app.ResponseService, app.Validator, pubToken.Middleware)
 	return NewModule(service, pubToken.Middleware, controller, jwt, db, app.App)
 }
 
-var FxModule = fx.Module("User", fx.Provide(NewPubService), fx.Provide(newPubController), fx.Provide(NewModule), fx.Invoke(fxRegister))
+var FxModule = fx.Module("Pub", fx.Provide(NewPubService), fx.Provide(newPubController), fx.Provide(NewModule), fx.Invoke(fxRegister))
 
 // implements `BaseModule` of `base/module.go` start
 

@@ -15,6 +15,7 @@ import (
 	"private-pub-repo/modules/monitor"
 	"private-pub-repo/modules/pub/pubdto"
 	"private-pub-repo/modules/pub/pubmodel"
+	"private-pub-repo/modules/storage"
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
@@ -25,12 +26,15 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+const filePathFormat = "pub/packages/%s/versions/%s.tar.gz"
+
 type PubService interface {
 	Init(db db.DbService)
 	VersionList(context context.Context, packageName string, baseUrl string, publicOnly bool) (*pubdto.PubPackageDTO, error)
 	VersionDetail(context context.Context, packageName string, version string, baseUrl string, publicOnly bool) (*pubdto.PubVersionDTO, error)
-	GetUpstreamUrl(path string) *string
-	UploadVersion(file *multipart.FileHeader, userId uuid.UUID) error
+	GetUpstreamUrl(context context.Context, path string) *string
+	UploadVersion(context context.Context, file *multipart.FileHeader, userId uuid.UUID) error
+	GetDownloadUrl(context context.Context, packageName string, version string, baseUrl string, publicOnly bool) (*string, error)
 }
 
 type pubServiceImpl struct {
@@ -38,13 +42,15 @@ type pubServiceImpl struct {
 	jwtService     jwt.JwtService
 	db             *gorm.DB
 	upstreamUrl    string
+	storage        storage.StorageService
 }
 
-func NewPubService(jwtService jwt.JwtService, monitorService monitor.MonitorService, config *config.ConfigModule) PubService {
+func NewPubService(jwtService jwt.JwtService, monitorService monitor.MonitorService, config *config.ConfigModule, storage storage.StorageService) PubService {
 	return &pubServiceImpl{
 		jwtService:     jwtService,
 		monitorService: monitorService,
 		upstreamUrl:    config.Getenv("UPSTREAM_URL", ""),
+		storage:        storage,
 	}
 }
 
@@ -118,7 +124,9 @@ func (service *pubServiceImpl) VersionDetail(context context.Context, packageNam
 	return &pubDTO, nil
 }
 
-func (service *pubServiceImpl) GetUpstreamUrl(path string) *string {
+func (service *pubServiceImpl) GetUpstreamUrl(context context.Context, path string) *string {
+	_, span := service.monitorService.StartTraceSpan(context, "PubService.GetUpstreamUrl", map[string]interface{}{})
+	defer span.End()
 	if service.upstreamUrl == "" {
 		return nil
 	}
@@ -126,73 +134,15 @@ func (service *pubServiceImpl) GetUpstreamUrl(path string) *string {
 	return &newUrl
 }
 
-func (service *pubServiceImpl) UploadVersion(file *multipart.FileHeader, userId uuid.UUID) error {
-	reader, err := file.Open()
-	if err != nil {
-		return err
-	}
-	defer reader.Close()
-
-	// Create a Gzip reader
-	gzipReader, err := gzip.NewReader(reader)
-	if err != nil {
-		return err
-	}
-	defer gzipReader.Close()
-
-	// Create a tar reader
-	tarReader := tar.NewReader(gzipReader)
-
+func (service *pubServiceImpl) UploadVersion(context context.Context, file *multipart.FileHeader, userId uuid.UUID) error {
+	_, span := service.monitorService.StartTraceSpan(context, "PubService.UploadVersion", map[string]interface{}{})
+	defer span.End()
 	tarPackageInfo := pubdto.TarPackageInfoDTO{}
 
-	hasPubspec := false
-
 	// Loop through each entry in the tar archive
-	for {
-		header, err := tarReader.Next()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			return err
-		}
-
-		// Check if the filename matches any target file (case insensitive)
-		filename := filepath.Base(header.Name)
-
-		// Extract the file content based on its type
-		switch header.Typeflag {
-		case tar.TypeReg:
-			var content []byte
-
-			// Extract pubspec.yaml content into map
-			switch strings.ToLower(filename) {
-			case "pubspec.yaml":
-				content, err = io.ReadAll(tarReader)
-				if err != nil {
-					return err
-				}
-
-				var data map[string]interface{}
-				if err := yaml.Unmarshal(content, &data); err != nil {
-					return fmt.Errorf("failed to unmarshal pubspec.yaml: %w", err)
-				}
-				tarPackageInfo.Pubspec = data
-				hasPubspec = true
-			case "readme.md":
-				content, err = io.ReadAll(tarReader)
-				if err != nil {
-					return err
-				}
-				tarPackageInfo.Readme = string(content)
-			case "changelog.md":
-				content, err = io.ReadAll(tarReader)
-				if err != nil {
-					return err
-				}
-				tarPackageInfo.Changelog = string(content)
-			}
-		}
+	hasPubspec, shouldReturn, returnValue := service.readArchiveContent(file, &tarPackageInfo)
+	if shouldReturn {
+		return returnValue
 	}
 
 	if !hasPubspec {
@@ -224,6 +174,12 @@ func (service *pubServiceImpl) UploadVersion(file *multipart.FileHeader, userId 
 		return result.Error
 	}
 
+	err = service.storage.Upload(fmt.Sprintf(filePathFormat, packageName, version), file)
+
+	if err != nil {
+		return err
+	}
+
 	result = service.db.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "package_name"}, {Name: "version"}},
 		DoUpdates: clause.AssignmentColumns([]string{"readme", "changelog", "pubspec", "uploader_id"}),
@@ -245,6 +201,88 @@ func (service *pubServiceImpl) UploadVersion(file *multipart.FileHeader, userId 
 
 	//upload tar.gz
 	return nil
+}
+
+func (service *pubServiceImpl) readArchiveContent(file *multipart.FileHeader, tarPackageInfo *pubdto.TarPackageInfoDTO) (bool, bool, error) {
+	reader, err := file.Open()
+	if err != nil {
+		return false, true, err
+	}
+	defer reader.Close()
+
+	// Create a Gzip reader
+	gzipReader, err := gzip.NewReader(reader)
+	if err != nil {
+		return false, true, err
+	}
+	defer gzipReader.Close()
+
+	// Create a tar reader
+	tarReader := tar.NewReader(gzipReader)
+
+	hasPubspec := false
+
+	for {
+		header, err := tarReader.Next()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return false, true, err
+		}
+
+		// Check if the filename matches any target file (case insensitive)
+		filename := filepath.Base(header.Name)
+
+		// Extract the file content based on its type
+		switch header.Typeflag {
+		case tar.TypeReg:
+			var content []byte
+
+			// Extract pubspec.yaml content into map
+			switch strings.ToLower(filename) {
+			case "pubspec.yaml":
+				content, err = io.ReadAll(tarReader)
+				if err != nil {
+					return false, true, err
+				}
+
+				var data map[string]interface{}
+				if err := yaml.Unmarshal(content, &data); err != nil {
+					return false, true, fmt.Errorf("failed to unmarshal pubspec.yaml: %w", err)
+				}
+				tarPackageInfo.Pubspec = data
+				hasPubspec = true
+			case "readme.md":
+				content, err = io.ReadAll(tarReader)
+				if err != nil {
+					return false, true, err
+				}
+				tarPackageInfo.Readme = string(content)
+			case "changelog.md":
+				content, err = io.ReadAll(tarReader)
+				if err != nil {
+					return false, true, err
+				}
+				tarPackageInfo.Changelog = string(content)
+			}
+		}
+	}
+	return hasPubspec, false, nil
+}
+
+func (service *pubServiceImpl) GetDownloadUrl(context context.Context, packageName string, version string, baseUrl string, publicOnly bool) (*string, error) {
+	_, span := service.monitorService.StartTraceSpan(context, "PubService.GetDownloadUrl", map[string]interface{}{})
+	defer span.End()
+
+	_, err := service.VersionDetail(context, packageName, version, baseUrl, publicOnly)
+
+	if err != nil {
+		return nil, err
+	}
+
+	url := service.storage.GetUrl(fmt.Sprintf(filePathFormat, packageName, version))
+	return &url, nil
 }
 
 // impl `PubService` end

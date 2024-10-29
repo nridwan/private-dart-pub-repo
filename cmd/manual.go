@@ -12,6 +12,7 @@ import (
 	"private-pub-repo/modules/monitor"
 	"private-pub-repo/modules/pub"
 	"private-pub-repo/modules/pubtoken"
+	"private-pub-repo/modules/storage"
 	"private-pub-repo/modules/user"
 	"syscall"
 
@@ -32,13 +33,14 @@ func CommandManual() *cli.Command {
 
 func runManual() {
 	configModule := config.SetupModule()
+	storageModule := storage.SetupModule(configModule)
 	appModule := app.SetupModule(configModule)
 	monitorModule := monitor.SetupModule(appModule, configModule)
 	dbModule := db.SetupModule(configModule)
 	jwtModule := jwt.SetupModule(appModule, configModule)
 	userModule := user.SetupModule(appModule, dbModule, jwtModule, monitorModule)
 	pubTokenModule := pubtoken.SetupModule(appModule, dbModule, userModule, jwtModule, monitorModule)
-	pubModule := pub.SetupModule(appModule, dbModule, jwtModule, pubTokenModule, monitorModule, configModule)
+	pubModule := pub.SetupModule(appModule, dbModule, jwtModule, pubTokenModule, monitorModule, configModule, storageModule)
 
 	modules := []base.BaseModule{
 		configModule,

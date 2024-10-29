@@ -38,7 +38,7 @@ func SetupModule(app *app.AppModule, db *db.DbModule, user *user.UserModule, jwt
 	return NewModule(service, middleware, controller, jwt, db, user.Middleware, app.App)
 }
 
-var FxModule = fx.Module("User", fx.Provide(NewPubTokenService), fx.Provide(NewPubTokenJwtMiddleware), fx.Provide(newPubTokenController), fx.Provide(NewModule), fx.Invoke(fxRegister))
+var FxModule = fx.Module("PubToken", fx.Provide(NewPubTokenService), fx.Provide(NewPubTokenJwtMiddleware), fx.Provide(newPubTokenController), fx.Provide(NewModule), fx.Invoke(fxRegister))
 
 // implements `BaseModule` of `base/module.go` start
 

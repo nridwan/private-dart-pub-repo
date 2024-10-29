@@ -60,6 +60,21 @@ func (controller *pubController) handleVersionDetail(ctx *fiber.Ctx) error {
 	return ctx.Status(200).JSON(result, jsonResponseType)
 }
 
+func (controller *pubController) handleDownloadPath(ctx *fiber.Ctx) error {
+	packageName := ctx.Params("package")
+	version := ctx.Params("version")
+
+	publicOnly := !utils.HasJwt(ctx) || controller.middleware.HasAccess(ctx) != nil
+
+	downloadUrl, err := controller.service.GetDownloadUrl(ctx.UserContext(), packageName, version, ctx.BaseURL(), publicOnly)
+
+	if err != nil {
+		return controller.handleControllerError(ctx, "api/packages/"+packageName+"/versions/"+version, err)
+	}
+
+	return ctx.Redirect(*downloadUrl, fiber.StatusFound)
+}
+
 func (controller *pubController) handleGetUploadUrl(ctx *fiber.Ctx) error {
 	return ctx.Status(200).JSON(map[string]interface{}{
 		"url":    ctx.BaseURL() + "/" + uploadUrlPath,
@@ -74,13 +89,13 @@ func (controller *pubController) handleDoUpload(ctx *fiber.Ctx) error {
 		return controller.processError(ctx, fiber.StatusBadRequest, err.Error())
 	}
 
-	err = controller.service.UploadVersion(file, controller.middleware.GetPubUserId(ctx))
+	err = controller.service.UploadVersion(ctx.UserContext(), file, controller.middleware.GetPubUserId(ctx))
 
 	if err != nil {
-		return ctx.Redirect(ctx.BaseURL()+"/"+finishUploadUrlPath+"?error="+url.QueryEscape(err.Error()), fiber.StatusFound)
+		return ctx.Redirect(ctx.BaseURL()+"/"+finishUploadUrlPath+"?error="+url.QueryEscape(err.Error()), fiber.StatusNoContent)
 	}
 
-	return ctx.Redirect(ctx.BaseURL()+"/"+finishUploadUrlPath, fiber.StatusFound)
+	return ctx.Redirect(ctx.BaseURL()+"/"+finishUploadUrlPath, fiber.StatusNoContent)
 }
 
 func (controller *pubController) handleFinishUpload(ctx *fiber.Ctx) error {
@@ -101,7 +116,7 @@ func (controller *pubController) handleFinishUpload(ctx *fiber.Ctx) error {
 
 func (controller *pubController) handleControllerError(ctx *fiber.Ctx, currentPath string, err error) error {
 	if err == fiber.ErrNotFound {
-		if url := controller.service.GetUpstreamUrl(currentPath); url != nil {
+		if url := controller.service.GetUpstreamUrl(ctx.UserContext(), currentPath); url != nil {
 			ctx.Redirect(*url, fiber.StatusFound)
 		}
 		return controller.processError(ctx, fiber.StatusNotFound, "Not Found")

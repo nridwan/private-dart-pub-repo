@@ -10,6 +10,7 @@ import (
 	"private-pub-repo/modules/monitor"
 	"private-pub-repo/modules/pub"
 	"private-pub-repo/modules/pubtoken"
+	"private-pub-repo/modules/storage"
 	"private-pub-repo/modules/user"
 
 	"github.com/gofiber/fiber/v2"
@@ -31,6 +32,7 @@ func CommandFx() *cli.Command {
 func runFx() {
 	fxApp := fx.New(
 		config.FxModule,
+		storage.FxModule,
 		app.FxModule,
 		monitor.FxModule,
 		db.FxModule,

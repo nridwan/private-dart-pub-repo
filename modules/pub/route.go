@@ -17,5 +17,5 @@ func (module *PubModule) registerRoutes() {
 	module.app.Get(finishUploadUrlPath, module.jwtService.GetHandler(), module.middleware.CanAccess, module.middleware.CanWrite, module.controller.handleFinishUpload)
 	module.app.Get(versionListPath, module.jwtService.GetOptionalHandler(), module.controller.handleVersionList)
 	module.app.Get(versionDetailPath, module.jwtService.GetOptionalHandler(), module.controller.handleVersionDetail)
-	module.app.Get(downloadPath, module.jwtService.GetOptionalHandler(), module.controller.handleVersionDetail)
+	module.app.Get(downloadPath, module.jwtService.GetOptionalHandler(), module.controller.handleDownloadPath)
 }
