@@ -13,6 +13,7 @@ type jwtCommonMiddleware interface {
 }
 
 type JwtMiddleware interface {
+	HasAccess(c *fiber.Ctx) error
 	CanAccess(c *fiber.Ctx) error
 	CanRefresh(c *fiber.Ctx) error
 }

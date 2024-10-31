@@ -39,19 +39,29 @@ func (service *userMiddlewareImpl) IsAdmin(c *fiber.Ctx) error {
 
 // impl `jwt.JwtMiddleware` start
 
-func (service *userMiddlewareImpl) CanAccess(c *fiber.Ctx) error {
+func (service *userMiddlewareImpl) HasAccess(c *fiber.Ctx) error {
 	err := service.jwtService.CanAccess(c, jwtIssuer)
 
 	if err == nil {
 		var userId string
 		if userId, err = utils.GetFiberJwtUserIdString(c); err == nil {
 			service.monitorService.SetCurrentSpanAttributes(c.UserContext(), map[string]interface{}{"admin_user_id": userId})
-			return c.Next()
 		}
 	}
 
 	return err
 }
+
+func (service *userMiddlewareImpl) CanAccess(c *fiber.Ctx) error {
+	err := service.HasAccess(c)
+
+	if err == nil {
+		return c.Next()
+	}
+
+	return err
+}
+
 func (service *userMiddlewareImpl) CanRefresh(c *fiber.Ctx) error {
 	if err := service.jwtService.CanRefresh(c, jwtIssuer); err != nil {
 		return err

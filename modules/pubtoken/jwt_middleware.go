@@ -14,7 +14,6 @@ type PubTokenJwtMiddleware interface {
 	jwt.JwtMiddleware
 	CanWrite(c *fiber.Ctx) error
 	GetPubUserId(c *fiber.Ctx) uuid.UUID
-	HasAccess(c *fiber.Ctx) error
 }
 
 type pubTokenMiddlewareImpl struct {

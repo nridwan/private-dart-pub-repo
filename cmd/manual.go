@@ -40,7 +40,7 @@ func runManual() {
 	jwtModule := jwt.SetupModule(appModule, configModule)
 	userModule := user.SetupModule(appModule, dbModule, jwtModule, monitorModule)
 	pubTokenModule := pubtoken.SetupModule(appModule, dbModule, userModule, jwtModule, monitorModule)
-	pubModule := pub.SetupModule(appModule, dbModule, jwtModule, pubTokenModule, monitorModule, configModule, storageModule)
+	pubModule := pub.SetupModule(appModule, dbModule, jwtModule, pubTokenModule, userModule, monitorModule, configModule, storageModule)
 
 	modules := []base.BaseModule{
 		configModule,

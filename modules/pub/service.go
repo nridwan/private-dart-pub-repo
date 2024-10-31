@@ -9,6 +9,7 @@ import (
 	"io"
 	"mime/multipart"
 	"path/filepath"
+	"private-pub-repo/modules/app/appmodel"
 	"private-pub-repo/modules/config"
 	"private-pub-repo/modules/db"
 	"private-pub-repo/modules/jwt"
@@ -17,6 +18,7 @@ import (
 	"private-pub-repo/modules/pub/pubmodel"
 	"private-pub-repo/modules/storage"
 	"strings"
+	"sync"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/gofiber/fiber/v2"
@@ -35,6 +37,10 @@ type PubService interface {
 	GetUpstreamUrl(context context.Context, path string) *string
 	UploadVersion(context context.Context, file *multipart.FileHeader, userId uuid.UUID) error
 	GetDownloadUrl(context context.Context, packageName string, version string, baseUrl string, publicOnly bool) (*string, error)
+	QueryPackageList(context context.Context, req *appmodel.GetListRequest, publicOnly bool) (*appmodel.PaginationResponseList, error)
+	QueryPackageUpdate(context context.Context, packageName string, updateDTO *pubdto.UpdatePubPackageDTO, publicOnly bool) (*pubmodel.PubPackageModel, error)
+	QueryVersionList(context context.Context, packageName string, req *appmodel.GetListRequest, publicOnly bool) (*appmodel.PaginationResponseList, error)
+	QueryVersionDetail(context context.Context, packageName string, version string, publicOnly bool) (*pubmodel.PubVersionModel, error)
 }
 
 type pubServiceImpl struct {
@@ -283,6 +289,185 @@ func (service *pubServiceImpl) GetDownloadUrl(context context.Context, packageNa
 
 	url := service.storage.GetUrl(fmt.Sprintf(filePathFormat, packageName, version))
 	return &url, nil
+}
+
+func (service *pubServiceImpl) QueryPackageList(
+	context context.Context,
+	req *appmodel.GetListRequest,
+	publicOnly bool,
+) (*appmodel.PaginationResponseList, error) {
+	spanContext, span := service.monitorService.StartTraceSpan(context, "PubService.QueryPackageList", map[string]interface{}{})
+	defer span.End()
+	var count int64
+	packages := []pubmodel.PubPackageModel{}
+	query := service.db.WithContext(spanContext).Model(packages)
+
+	if publicOnly {
+		query.Where("private = false")
+	}
+
+	if req.Search != "" {
+		query.Where("name ILIKE ?", "%"+req.Search+"%")
+	}
+
+	query = query.Session(&gorm.Session{})
+
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	// Perform count and find concurrently using goroutines
+	errChan := make(chan error, 2)
+	go func() {
+		defer wg.Done()
+		errChan <- query.Count(&count).Error
+	}()
+
+	go func() {
+		defer wg.Done()
+		query = query.Session(&gorm.Session{})
+		errChan <- query.
+			Order("name ASC").
+			Limit(req.Limit).Offset((req.Page - 1) * req.Limit).Find(&packages).Error
+	}()
+
+	wg.Wait()
+
+	var err error
+	for i := 0; i < 2; i++ {
+		select {
+		case err = <-errChan:
+			if err != nil {
+				return nil, err
+			}
+		default:
+		}
+	}
+
+	count32 := int(count)
+
+	return &appmodel.PaginationResponseList{
+		Pagination: &appmodel.PaginationResponsePagination{
+			Page:  &req.Page,
+			Size:  &req.Limit,
+			Total: &count32,
+		},
+		Content: packages,
+	}, nil
+}
+
+func (service *pubServiceImpl) QueryPackageUpdate(
+	context context.Context,
+	packageName string,
+	updateDTO *pubdto.UpdatePubPackageDTO,
+	publicOnly bool,
+) (*pubmodel.PubPackageModel, error) {
+	spanContext, span := service.monitorService.StartTraceSpan(context, "PubService.QueryPackageUpdate", map[string]interface{}{})
+	defer span.End()
+
+	packageInfo := pubmodel.PubPackageModel{Name: packageName}
+	result := service.db.WithContext(spanContext).Model(&packageInfo).Updates(updateDTO)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &packageInfo, nil
+}
+
+func (service *pubServiceImpl) QueryVersionList(
+	context context.Context,
+	packageName string,
+	req *appmodel.GetListRequest,
+	publicOnly bool,
+) (*appmodel.PaginationResponseList, error) {
+	spanContext, span := service.monitorService.StartTraceSpan(context, "PubService.QueryVersionList", map[string]interface{}{})
+	defer span.End()
+	pubPackage := pubmodel.PubPackageModel{}
+
+	result := service.db.WithContext(spanContext).First(&pubPackage, "name = ?", packageName)
+
+	if result.Error != nil || (pubPackage.Private && publicOnly) {
+		return nil, fiber.ErrNotFound
+	}
+
+	var count int64
+	versions := []pubmodel.PubVersionModel{}
+	query := service.db.WithContext(spanContext).Model(versions).Select("package_name", "version", "created_at", "updated_at").
+		Where("package_name = ?", pubPackage.Name)
+
+	if req.Search != "" {
+		query.Where("version ILIKE ?", "%"+req.Search+"%")
+	}
+
+	query = query.Session(&gorm.Session{})
+
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	// Perform count and find concurrently using goroutines
+	errChan := make(chan error, 2)
+	go func() {
+		defer wg.Done()
+		errChan <- query.Count(&count).Error
+	}()
+
+	go func() {
+		defer wg.Done()
+		query = query.Session(&gorm.Session{})
+		errChan <- query.
+			Order(clause.OrderBy{Columns: []clause.OrderByColumn{
+				{Column: clause.Column{Name: "version_number_major"}, Desc: true},
+				{Column: clause.Column{Name: "version_number_minor"}, Desc: true},
+				{Column: clause.Column{Name: "version_number_patch"}, Desc: true},
+			}}).
+			Limit(req.Limit).Offset((req.Page - 1) * req.Limit).Find(&versions).Error
+	}()
+
+	wg.Wait()
+
+	var err error
+	for i := 0; i < 2; i++ {
+		select {
+		case err = <-errChan:
+			if err != nil {
+				return nil, err
+			}
+		default:
+		}
+	}
+
+	count32 := int(count)
+
+	return &appmodel.PaginationResponseList{
+		Pagination: &appmodel.PaginationResponsePagination{
+			Page:  &req.Page,
+			Size:  &req.Limit,
+			Total: &count32,
+		},
+		Content: versions,
+	}, nil
+}
+
+func (service *pubServiceImpl) QueryVersionDetail(context context.Context, packageName string, version string, publicOnly bool) (*pubmodel.PubVersionModel, error) {
+	spanContext, span := service.monitorService.StartTraceSpan(context, "PubService.QueryVersionDetail", map[string]interface{}{})
+	defer span.End()
+	pubPackage := pubmodel.PubPackageModel{}
+	pubVersion := pubmodel.PubVersionModel{}
+
+	result := service.db.WithContext(spanContext).First(&pubPackage, "name = ?", packageName)
+
+	if result.Error != nil || (pubPackage.Private && publicOnly) {
+		return nil, fiber.ErrNotFound
+	}
+
+	result = service.db.WithContext(spanContext).Model(pubVersion).
+		Where("package_name = ?", packageName).
+		Where("version = ?", version).
+		First(&pubVersion)
+
+	if result.Error != nil {
+		return nil, fiber.ErrNotFound
+	}
+
+	return &pubVersion, nil
 }
 
 // impl `PubService` end

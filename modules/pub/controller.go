@@ -1,9 +1,13 @@
 package pub
 
 import (
+	"fmt"
 	"net/url"
 	"private-pub-repo/modules/app"
+	"private-pub-repo/modules/app/appmodel"
+	"private-pub-repo/modules/pub/pubdto"
 	"private-pub-repo/modules/pubtoken"
+	"private-pub-repo/modules/user"
 	"private-pub-repo/utils"
 	"strconv"
 
@@ -11,21 +15,28 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-const jsonResponseType = "application/vnd.pub.v2+json"
+const (
+	jsonResponseType = "application/vnd.pub.v2+json"
+	validationError  = "Validation Error"
+)
 
 type pubController struct {
 	service         PubService
 	responseService app.ResponseService
 	validator       *validator.Validate
 	middleware      pubtoken.PubTokenJwtMiddleware
+	userMiddleware  user.UserJwtMiddleware
 }
 
-func newPubController(service PubService, responseService app.ResponseService, validator *validator.Validate, middleware pubtoken.PubTokenJwtMiddleware) *pubController {
+func newPubController(
+	service PubService, responseService app.ResponseService, validator *validator.Validate,
+	middleware pubtoken.PubTokenJwtMiddleware, userMiddleware user.UserJwtMiddleware) *pubController {
 	return &pubController{
 		service:         service,
 		responseService: responseService,
 		validator:       validator,
 		middleware:      middleware,
+		userMiddleware:  userMiddleware,
 	}
 }
 
@@ -110,6 +121,87 @@ func (controller *pubController) handleFinishUpload(ctx *fiber.Ctx) error {
 			"message": "Successfully uploaded package.",
 		},
 	}, jsonResponseType)
+}
+
+func (controller *pubController) handleQueryPackageList(ctx *fiber.Ctx) error {
+	request := appmodel.NewGetListRequest(ctx.Query("page"), ctx.Query("limit"), ctx.Query("search"))
+	err := controller.validator.Struct(request)
+
+	if err != nil {
+		return controller.responseService.SendValidationErrorResponse(ctx, 400, validationError, err.(validator.ValidationErrors))
+	}
+
+	publicOnly := !utils.HasJwt(ctx) || controller.userMiddleware.HasAccess(ctx) != nil
+
+	list, err := controller.service.QueryPackageList(ctx.UserContext(), request, publicOnly)
+
+	if err != nil {
+		return fiber.NewError(400, err.Error())
+	}
+
+	return controller.responseService.SendSuccessResponse(ctx, 200, appmodel.PaginationResponse{
+		List: list,
+	})
+}
+
+func (controller *pubController) handleQueryPackageUpdate(ctx *fiber.Ctx) error {
+	packageName := ctx.Params("package")
+
+	request := pubdto.UpdatePubPackageDTO{}
+	ctx.BodyParser(&request)
+	err := controller.validator.Struct(request)
+
+	if err != nil {
+		return controller.responseService.SendValidationErrorResponse(ctx, 400, validationError, err.(validator.ValidationErrors))
+	}
+
+	publicOnly := !utils.HasJwt(ctx) || controller.userMiddleware.HasAccess(ctx) != nil
+
+	result, err := controller.service.QueryPackageUpdate(ctx.UserContext(), packageName, &request, publicOnly)
+
+	if err != nil {
+		return controller.handleControllerError(ctx, "api/packages/"+packageName, err)
+	}
+
+	return ctx.Status(200).JSON(result, jsonResponseType)
+}
+
+func (controller *pubController) handleQueryVersionList(ctx *fiber.Ctx) error {
+	request := appmodel.NewGetListRequest(ctx.Query("page"), ctx.Query("limit"), ctx.Query("search"))
+	err := controller.validator.Struct(request)
+
+	if err != nil {
+		return controller.responseService.SendValidationErrorResponse(ctx, 400, validationError, err.(validator.ValidationErrors))
+	}
+
+	packageName := ctx.Params("package")
+
+	publicOnly := !utils.HasJwt(ctx) || controller.userMiddleware.HasAccess(ctx) != nil
+	fmt.Printf("%v", !utils.HasJwt(ctx))
+
+	list, err := controller.service.QueryVersionList(ctx.UserContext(), packageName, request, publicOnly)
+
+	if err != nil {
+		return fiber.NewError(400, err.Error())
+	}
+
+	return controller.responseService.SendSuccessResponse(ctx, 200, appmodel.PaginationResponse{
+		List: list,
+	})
+}
+
+func (controller *pubController) handleQueryVersionDetail(ctx *fiber.Ctx) error {
+	packageName := ctx.Params("package")
+	version := ctx.Params("version")
+
+	publicOnly := !utils.HasJwt(ctx) || controller.userMiddleware.HasAccess(ctx) != nil
+
+	user, err := controller.service.QueryVersionDetail(ctx.UserContext(), packageName, version, publicOnly)
+
+	if err != nil {
+		return fiber.NewError(400, err.Error())
+	}
+	return controller.responseService.SendSuccessDetailResponse(ctx, 200, user)
 }
 
 // handlers end

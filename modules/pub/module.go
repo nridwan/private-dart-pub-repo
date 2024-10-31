@@ -10,22 +10,24 @@ import (
 	"private-pub-repo/modules/pub/pubmodel"
 	"private-pub-repo/modules/pubtoken"
 	"private-pub-repo/modules/storage"
+	"private-pub-repo/modules/user"
 
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/fx"
 )
 
 type PubModule struct {
-	Service    PubService
-	middleware pubtoken.PubTokenJwtMiddleware
-	controller *pubController
-	jwtService jwt.JwtService
-	db         db.DbService
-	app        *fiber.App
+	Service        PubService
+	middleware     pubtoken.PubTokenJwtMiddleware
+	userMiddleware user.UserJwtMiddleware
+	controller     *pubController
+	jwtService     jwt.JwtService
+	db             db.DbService
+	app            *fiber.App
 }
 
-func NewModule(service PubService, middleware pubtoken.PubTokenJwtMiddleware, controller *pubController, jwtService jwt.JwtService, db db.DbService, app *fiber.App) *PubModule {
-	return &PubModule{Service: service, middleware: middleware, jwtService: jwtService, controller: controller, db: db, app: app}
+func NewModule(service PubService, middleware pubtoken.PubTokenJwtMiddleware, userMiddleware user.UserJwtMiddleware, controller *pubController, jwtService jwt.JwtService, db db.DbService, app *fiber.App) *PubModule {
+	return &PubModule{Service: service, middleware: middleware, userMiddleware: userMiddleware, jwtService: jwtService, controller: controller, db: db, app: app}
 }
 
 func fxRegister(lifeCycle fx.Lifecycle, module *PubModule) {
@@ -34,11 +36,12 @@ func fxRegister(lifeCycle fx.Lifecycle, module *PubModule) {
 
 func SetupModule(
 	app *app.AppModule, db *db.DbModule, jwt *jwt.JwtModule, pubToken *pubtoken.PubTokenModule,
-	monitor *monitor.MonitorModule, config *config.ConfigModule, storage *storage.StorageModule,
+	user *user.UserModule, monitor *monitor.MonitorModule, config *config.ConfigModule,
+	storage *storage.StorageModule,
 ) *PubModule {
 	service := NewPubService(jwt, monitor.Service, config, storage)
-	controller := newPubController(service, app.ResponseService, app.Validator, pubToken.Middleware)
-	return NewModule(service, pubToken.Middleware, controller, jwt, db, app.App)
+	controller := newPubController(service, app.ResponseService, app.Validator, pubToken.Middleware, user.Middleware)
+	return NewModule(service, pubToken.Middleware, user.Middleware, controller, jwt, db, app.App)
 }
 
 var FxModule = fx.Module("Pub", fx.Provide(NewPubService), fx.Provide(newPubController), fx.Provide(NewModule), fx.Invoke(fxRegister))
