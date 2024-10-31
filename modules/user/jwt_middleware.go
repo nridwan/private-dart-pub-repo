@@ -53,7 +53,11 @@ func (service *userMiddlewareImpl) CanAccess(c *fiber.Ctx) error {
 	return err
 }
 func (service *userMiddlewareImpl) CanRefresh(c *fiber.Ctx) error {
-	return service.jwtService.CanRefresh(c, jwtIssuer)
+	if err := service.jwtService.CanRefresh(c, jwtIssuer); err != nil {
+		return err
+	}
+
+	return c.Next()
 }
 
 // impl `jwt.JwtMiddleware` end
