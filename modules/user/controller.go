@@ -67,6 +67,40 @@ func (controller *userController) handleLogin(ctx *fiber.Ctx) error {
 	return controller.responseService.SendSuccessDetailResponse(ctx, 200, response)
 }
 
+func (controller *userController) handleForgotOtp(ctx *fiber.Ctx) error {
+	request := userdto.ForgotOtpDTO{}
+	ctx.BodyParser(&request)
+	err := controller.validator.Struct(request)
+
+	if err != nil {
+		return controller.responseService.SendValidationErrorResponse(ctx, 400, validationError, err.(validator.ValidationErrors))
+	}
+
+	response, err := controller.service.ForgotOtp(ctx.UserContext(), &request)
+
+	if err != nil {
+		return fiber.NewError(400, err.Error())
+	}
+	return controller.responseService.SendSuccessDetailResponse(ctx, 200, response)
+}
+
+func (controller *userController) handleForgotCreatePassword(ctx *fiber.Ctx) error {
+	request := userdto.ForgotCreatePasswordDTO{}
+	ctx.BodyParser(&request)
+	err := controller.validator.Struct(request)
+
+	if err != nil {
+		return controller.responseService.SendValidationErrorResponse(ctx, 400, validationError, err.(validator.ValidationErrors))
+	}
+
+	response, err := controller.service.ForgotCreatePassword(ctx.UserContext(), &request)
+
+	if err != nil {
+		return fiber.NewError(400, err.Error())
+	}
+	return controller.responseService.SendSuccessDetailResponse(ctx, 200, response)
+}
+
 func (controller *userController) handleProfile(ctx *fiber.Ctx) error {
 	var user *userdto.UserDTO
 	var err error

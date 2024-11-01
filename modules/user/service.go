@@ -14,8 +14,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	gonanoid "github.com/matoous/go-nanoid/v2"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 const (
@@ -30,6 +32,8 @@ type UserService interface {
 	Detail(context context.Context, id uuid.UUID) (*userdto.UserDTO, error)
 	Delete(context context.Context, id uuid.UUID) error
 	Login(context context.Context, req *userdto.LoginDTO) (*userdto.LoginResponseDTO, error)
+	ForgotOtp(context context.Context, req *userdto.ForgotOtpDTO) (*userdto.ForgotOtpResponseDTO, error)
+	ForgotCreatePassword(context context.Context, req *userdto.ForgotCreatePasswordDTO) (bool, error)
 	RefreshToken(context context.Context, claims jwt.JwtClaim) (response *userdto.LoginResponseDTO, err error)
 	GenerateHashPassword(password string) (*string, error)
 }
@@ -189,13 +193,98 @@ func (service *userServiceImpl) Login(context context.Context, req *userdto.Logi
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(*user.Password), []byte(req.Password)) != nil {
-		return nil, fiber.NewError(400, "Phone Number and pwd doesn't match.")
+		return nil, fiber.NewError(400, "Email and password doesn't match.")
 	}
 
 	response, err = service.jwtService.GenerateToken(user.ID, jwtIssuer, map[string]interface {
 	}{
 		"is_admin": user.IsAdmin,
 	})
+	return
+}
+
+func (service *userServiceImpl) ForgotOtp(context context.Context, req *userdto.ForgotOtpDTO) (response *userdto.ForgotOtpResponseDTO, err error) {
+	spanContext, span := service.monitorService.StartTraceSpan(context, "UserService.ForgotOtp", map[string]interface{}{
+		"email": req.Email,
+	})
+	defer span.End()
+	var user usermodel.UserModel
+	result := service.db.WithContext(spanContext).Where("email = ?", req.Email).First(&user)
+	if result.Error != nil {
+		err = result.Error
+		return
+	}
+
+	otp, err := gonanoid.Generate("1234567890", 6)
+
+	if err != nil {
+		return
+	}
+
+	hashOtp, err := service.GenerateHashPassword(otp)
+
+	if err != nil {
+		return
+	}
+
+	userOtp := usermodel.UserOtpModel{
+		ID:      user.ID,
+		Purpose: usermodel.OtpPurposeForgot,
+		Otp:     *hashOtp,
+	}
+
+	result = service.db.WithContext(spanContext).Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id"}},
+		DoUpdates: clause.AssignmentColumns([]string{"purpose", "otp"}),
+	}).Create(userOtp)
+	if result.Error != nil {
+		err = result.Error
+		return
+	}
+
+	response = &otp
+
+	return
+}
+
+func (service *userServiceImpl) ForgotCreatePassword(context context.Context, req *userdto.ForgotCreatePasswordDTO) (response bool, err error) {
+	spanContext, span := service.monitorService.StartTraceSpan(context, "UserService.ForgotCreatePassword", map[string]interface{}{
+		"email": req.Email,
+	})
+	defer span.End()
+	var user usermodel.UserModel
+	result := service.db.WithContext(spanContext).Model(user).
+		Select("\"users\".\"id\"", "\"UserOtp\".\"otp\"").
+		InnerJoins("UserOtp", service.db.Where("purpose = ?", usermodel.OtpPurposeForgot)).
+		Where("email = ?", req.Email).First(&user)
+	if result.Error != nil {
+		err = result.Error
+		return
+	}
+
+	if bcrypt.CompareHashAndPassword([]byte(user.UserOtp.Otp), []byte(req.Otp)) != nil {
+		err = fiber.ErrNotFound
+		return
+	}
+
+	pwd, err := service.GenerateHashPassword(req.Password)
+
+	if err != nil {
+		return
+	}
+
+	result = service.db.WithContext(spanContext).Model(&user).Updates(userdto.UpdateUserDTO{
+		Password: pwd,
+	})
+
+	if result.Error != nil {
+		err = result.Error
+		return
+	}
+
+	service.db.WithContext(spanContext).Delete(&usermodel.UserOtpModel{}, user.ID)
+
+	response = true
 	return
 }
 

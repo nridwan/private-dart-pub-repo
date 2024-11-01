@@ -42,7 +42,7 @@ var FxModule = fx.Module("User", fx.Provide(NewUserService), fx.Provide(NewUserJ
 
 func (module *UserModule) OnStart() error {
 	if module.db.AutoMigrate() {
-		module.db.Default().AutoMigrate(&usermodel.UserModel{})
+		module.db.Default().AutoMigrate(&usermodel.UserModel{}, &usermodel.UserOtpModel{})
 	}
 
 	//run seeder
