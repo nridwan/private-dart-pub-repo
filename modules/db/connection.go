@@ -72,7 +72,6 @@ func (module *DbModule) AddConfig(profName string, config *DbProfile) {
 			suffix += url.QueryEscape(config.Locale)
 		}
 		suffix += "&parseTime=true&multiStatements=true"
-		log.Println(config.Username + ":" + config.Password + "@tcp(" + config.Host + ":" + config.Port + ")/" + config.Database + suffix)
 		module.db[profName], err = gorm.Open(
 			mysql.Open(config.Username+":"+config.Password+"@tcp("+config.Host+":"+config.Port+")/"+config.Database+suffix),
 			&gormConfig,
