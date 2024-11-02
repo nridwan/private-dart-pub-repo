@@ -3,8 +3,10 @@ package user
 import (
 	"private-pub-repo/base"
 	"private-pub-repo/modules/app"
+	"private-pub-repo/modules/config"
 	"private-pub-repo/modules/db"
 	"private-pub-repo/modules/jwt"
+	"private-pub-repo/modules/mail"
 	"private-pub-repo/modules/monitor"
 	"private-pub-repo/modules/user/usermodel"
 
@@ -29,8 +31,8 @@ func fxRegister(lifeCycle fx.Lifecycle, module *UserModule) {
 	base.FxRegister(module, lifeCycle)
 }
 
-func SetupModule(app *app.AppModule, db *db.DbModule, jwt *jwt.JwtModule, monitor *monitor.MonitorModule) *UserModule {
-	service := NewUserService(jwt, monitor.Service)
+func SetupModule(app *app.AppModule, db *db.DbModule, jwt *jwt.JwtModule, monitor *monitor.MonitorModule, config *config.ConfigModule, mail *mail.MailModule) *UserModule {
+	service := NewUserService(jwt, monitor.Service, config, mail)
 	middleware := NewUserJwtMiddleware(jwt, monitor.Service)
 	controller := newUserController(service, app.ResponseService, app.Validator)
 	return NewModule(service, middleware, controller, jwt, db, app.App)

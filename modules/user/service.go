@@ -2,15 +2,20 @@ package user
 
 import (
 	"context"
+	"fmt"
 	"private-pub-repo/base"
 	"private-pub-repo/modules/app/appmodel"
+	"private-pub-repo/modules/config"
 	"private-pub-repo/modules/db"
 	"private-pub-repo/modules/jwt"
+	"private-pub-repo/modules/mail"
 	"private-pub-repo/modules/monitor"
 	"private-pub-repo/modules/user/userdto"
 	"private-pub-repo/modules/user/usermodel"
 	"private-pub-repo/utils"
+	"strconv"
 	"sync"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -42,12 +47,22 @@ type userServiceImpl struct {
 	monitorService monitor.MonitorService
 	jwtService     jwt.JwtService
 	db             *gorm.DB
+	otpExpiredTime time.Duration
+	mail           mail.MailService
 }
 
-func NewUserService(jwtService jwt.JwtService, monitorService monitor.MonitorService) UserService {
+func NewUserService(jwtService jwt.JwtService, monitorService monitor.MonitorService, config config.ConfigService, mail mail.MailService) UserService {
+	otpExpiredTime, err := strconv.Atoi(config.Getenv("OTP_EXPIRED_TIME", "5"))
+
+	if err != nil {
+		otpExpiredTime = 5
+	}
+
 	return &userServiceImpl{
 		jwtService:     jwtService,
 		monitorService: monitorService,
+		otpExpiredTime: time.Duration(otpExpiredTime) * time.Minute,
+		mail:           mail,
 	}
 }
 
@@ -227,18 +242,36 @@ func (service *userServiceImpl) ForgotOtp(context context.Context, req *userdto.
 		return
 	}
 
+	expiredAt := time.Now().Add(service.otpExpiredTime)
+
 	userOtp := usermodel.UserOtpModel{
-		ID:      user.ID,
-		Purpose: usermodel.OtpPurposeForgot,
-		Otp:     *hashOtp,
+		ID:        user.ID,
+		Purpose:   usermodel.OtpPurposeForgot,
+		Otp:       *hashOtp,
+		ExpiredAt: &expiredAt,
 	}
 
 	result = service.db.WithContext(spanContext).Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "id"}},
-		DoUpdates: clause.AssignmentColumns([]string{"purpose", "otp"}),
+		DoUpdates: clause.AssignmentColumns([]string{"purpose", "otp", "expired_at"}),
 	}).Create(userOtp)
 	if result.Error != nil {
 		err = result.Error
+		return
+	}
+
+	err = service.mail.Send(
+		[]string{user.Email},
+		[]string{},
+		"Forgot Password OTP",
+		fmt.Sprintf(
+			`Please use this OTP below to change your password: %s. 
+OTP only valid for %d minute.
+Do not share this to anyone.`,
+			otp, service.otpExpiredTime/time.Minute,
+		),
+	)
+	if err != nil {
 		return
 	}
 
@@ -256,7 +289,9 @@ func (service *userServiceImpl) ForgotCreatePassword(context context.Context, re
 	result := service.db.WithContext(spanContext).Model(user).
 		Select("\"users\".\"id\"", "\"UserOtp\".\"otp\"").
 		InnerJoins("UserOtp", service.db.Where("purpose = ?", usermodel.OtpPurposeForgot)).
-		Where("email = ?", req.Email).First(&user)
+		Where("email = ?", req.Email).
+		Where("expired_at >= NOW()").
+		First(&user)
 	if result.Error != nil {
 		err = result.Error
 		return

@@ -7,6 +7,7 @@ import (
 	"private-pub-repo/modules/config"
 	"private-pub-repo/modules/db"
 	"private-pub-repo/modules/jwt"
+	"private-pub-repo/modules/mail"
 	"private-pub-repo/modules/monitor"
 	"private-pub-repo/modules/pub"
 	"private-pub-repo/modules/pubtoken"
@@ -33,6 +34,7 @@ func runFx() {
 	fxApp := fx.New(
 		config.FxModule,
 		storage.FxModule,
+		mail.FxModule,
 		app.FxModule,
 		monitor.FxModule,
 		db.FxModule,

@@ -76,12 +76,13 @@ func (controller *userController) handleForgotOtp(ctx *fiber.Ctx) error {
 		return controller.responseService.SendValidationErrorResponse(ctx, 400, validationError, err.(validator.ValidationErrors))
 	}
 
-	response, err := controller.service.ForgotOtp(ctx.UserContext(), &request)
+	_, err = controller.service.ForgotOtp(ctx.UserContext(), &request)
 
 	if err != nil {
 		return fiber.NewError(400, err.Error())
 	}
-	return controller.responseService.SendSuccessDetailResponse(ctx, 200, response)
+
+	return controller.responseService.SendSuccessDetailResponse(ctx, 200, true)
 }
 
 func (controller *userController) handleForgotCreatePassword(ctx *fiber.Ctx) error {
