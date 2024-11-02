@@ -45,10 +45,10 @@ func (service *JwtModule) Init(config config.ConfigService) {
 		ErrorHandler: func(c *fiber.Ctx, err error) error { return c.Next() },
 	})
 	if localLifetime, err := strconv.Atoi(config.Getenv("JWT_TOKEN_LIFETIME", "1")); err == nil {
-		service.lifetime = time.Duration(localLifetime)
+		service.lifetime = time.Duration(localLifetime) * time.Minute
 	}
 	if localLifetime, err := strconv.Atoi(config.Getenv("JWT_REFRESH_LIFETIME", "1")); err == nil {
-		service.refreshLifetime = time.Duration(localLifetime)
+		service.refreshLifetime = time.Duration(localLifetime) * time.Minute
 	}
 }
 
@@ -127,7 +127,7 @@ func (service *JwtModule) GenerateAccessTokenTimed(id uuid.UUID, issuer string, 
 }
 
 func (service *JwtModule) generateAccessToken(id uuid.UUID, issuer string, now int64, payload map[string]interface{}) (string, error) {
-	expiredAt := time.Unix(now, 0).Add(time.Minute * service.lifetime)
+	expiredAt := time.Unix(now, 0).Add(service.lifetime)
 	return service.GenerateAccessTokenTimed(id, issuer, now, payload, &expiredAt)
 }
 
@@ -142,7 +142,7 @@ func (service *JwtModule) generateRefreshToken(id uuid.UUID, issuer string, now 
 	claims["sub"] = id
 	claims["iat"] = currentTime.Unix()
 	claims["nbf"] = currentTime.Unix()
-	claims["exp"] = time.Unix(now, 0).Add(time.Minute * service.refreshLifetime).Unix()
+	claims["exp"] = time.Unix(now, 0).Add(service.refreshLifetime).Unix()
 	claims["iss"] = issuer
 	claims["aud"] = []string{JwtRefreshAud}
 	// Generate encoded token and send it as response.
