@@ -108,11 +108,7 @@ func (service *userServiceImpl) Update(context context.Context, id uuid.UUID, up
 	})
 	defer span.End()
 	if updateDTO.Password != nil {
-		pwd, err := service.GenerateHashPassword(*updateDTO.Password)
-		if err != nil {
-			return nil, err
-		}
-		updateDTO.Password = pwd
+		updateDTO.Password = nil
 	}
 	user := usermodel.UserModel{BaseModel: base.BaseModel{ID: id}}
 	result := service.db.WithContext(spanContext).Model(&user).Updates(updateDTO)
