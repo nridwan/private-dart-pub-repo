@@ -15,6 +15,7 @@ func main() {
 	stmts, err := gormschema.New("postgres").Load(
 		// user module
 		&usermodel.UserModel{},
+		&usermodel.UserOtpModel{},
 		// pubtoken module
 		&pubtokenmodel.PubTokenModel{},
 		// pub module
