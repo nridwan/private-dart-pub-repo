@@ -70,8 +70,6 @@ func (service *pubTokenServiceImpl) List(context context.Context, req *appmodel.
 		query.Where("name ILIKE ?", "%"+req.Search+"%")
 	}
 
-	query = query.Session(&gorm.Session{})
-
 	var wg sync.WaitGroup
 	wg.Add(2)
 
@@ -79,7 +77,7 @@ func (service *pubTokenServiceImpl) List(context context.Context, req *appmodel.
 	errChan := make(chan error, 2)
 	go func() {
 		defer wg.Done()
-		errChan <- query.Count(&count).Error
+		errChan <- query.Session(&gorm.Session{}).Count(&count).Error
 	}()
 
 	go func() {

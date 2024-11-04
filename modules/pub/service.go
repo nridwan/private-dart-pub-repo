@@ -310,8 +310,6 @@ func (service *pubServiceImpl) QueryPackageList(
 		query.Where("name ILIKE ?", "%"+req.Search+"%")
 	}
 
-	query = query.Session(&gorm.Session{})
-
 	var wg sync.WaitGroup
 	wg.Add(2)
 
@@ -319,7 +317,7 @@ func (service *pubServiceImpl) QueryPackageList(
 	errChan := make(chan error, 2)
 	go func() {
 		defer wg.Done()
-		errChan <- query.Count(&count).Error
+		errChan <- query.Session(&gorm.Session{}).Count(&count).Error
 	}()
 
 	go func() {
@@ -397,8 +395,6 @@ func (service *pubServiceImpl) QueryVersionList(
 		query.Where("version ILIKE ?", "%"+req.Search+"%")
 	}
 
-	query = query.Session(&gorm.Session{})
-
 	var wg sync.WaitGroup
 	wg.Add(2)
 
@@ -406,7 +402,7 @@ func (service *pubServiceImpl) QueryVersionList(
 	errChan := make(chan error, 2)
 	go func() {
 		defer wg.Done()
-		errChan <- query.Count(&count).Error
+		errChan <- query.Session(&gorm.Session{}).Count(&count).Error
 	}()
 
 	go func() {
