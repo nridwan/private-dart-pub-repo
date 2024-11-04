@@ -27,6 +27,8 @@ import (
 
 const (
 	jwtIssuer = "appUser"
+
+	emailWhereQuery = "email = ?"
 )
 
 type UserService interface {
@@ -68,7 +70,7 @@ func NewUserService(jwtService jwt.JwtService, monitorService monitor.MonitorSer
 
 func (service *userServiceImpl) validateEmail(context context.Context, email string) error {
 	var count int64
-	service.db.WithContext(context).Model(&usermodel.UserModel{}).Where("email = ?", email).Count(&count)
+	service.db.WithContext(context).Model(&usermodel.UserModel{}).Where(emailWhereQuery, email).Count(&count)
 	if count > 0 {
 		return fiber.NewError(400, "Email already registered")
 	}
@@ -195,7 +197,7 @@ func (service *userServiceImpl) Login(context context.Context, req *userdto.Logi
 	})
 	defer span.End()
 	var user usermodel.UserModel
-	result := service.db.WithContext(spanContext).Where("email = ?", req.Email).First(&user)
+	result := service.db.WithContext(spanContext).Where(emailWhereQuery, req.Email).First(&user)
 	if result.Error != nil {
 		err = result.Error
 		return
@@ -218,7 +220,7 @@ func (service *userServiceImpl) ForgotOtp(context context.Context, req *userdto.
 	})
 	defer span.End()
 	var user usermodel.UserModel
-	result := service.db.WithContext(spanContext).Where("email = ?", req.Email).First(&user)
+	result := service.db.WithContext(spanContext).Where(emailWhereQuery, req.Email).First(&user)
 	if result.Error != nil {
 		err = result.Error
 		return
@@ -283,7 +285,7 @@ func (service *userServiceImpl) ForgotCreatePassword(context context.Context, re
 	result := service.db.WithContext(spanContext).Model(user).
 		Select("\"users\".\"id\"", "\"UserOtp\".\"otp\"").
 		InnerJoins("UserOtp", service.db.Where("purpose = ?", usermodel.OtpPurposeForgot)).
-		Where("email = ?", req.Email).
+		Where(emailWhereQuery, req.Email).
 		Where("expired_at >= NOW()").
 		First(&user)
 	if result.Error != nil {
