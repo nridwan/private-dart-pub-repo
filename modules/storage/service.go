@@ -34,7 +34,7 @@ func (storage *StorageModule) Upload(key string, file *multipart.FileHeader) err
 }
 
 func (storage *StorageModule) GetUrl(key string) string {
-	req, _ := storage.s3.GetObjectRequest(&s3.GetObjectInput{
+	req, _ := storage.s3Public.GetObjectRequest(&s3.GetObjectInput{
 		Bucket: &storage.bucket,
 		Key:    &key,
 	})

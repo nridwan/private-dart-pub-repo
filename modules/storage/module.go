@@ -15,6 +15,7 @@ import (
 
 type StorageModule struct {
 	s3            *s3.S3
+	s3Public      *s3.S3
 	uploader      *s3manager.Uploader
 	bucket        string
 	enablePresign bool
@@ -22,14 +23,32 @@ type StorageModule struct {
 }
 
 func NewModule(config config.ConfigService) *StorageModule {
+	endpoint := aws.String(config.Getenv("S3_ENDPOINT", ""))
+	publicEndpoint := aws.String(config.Getenv("S3_PUBLIC_ENDPOINT", *endpoint))
+	region := aws.String(config.Getenv("S3_REGION", ""))
+	credentials := credentials.NewStaticCredentials(
+		config.Getenv("S3_KEY_ID", ""),
+		config.Getenv("S3_ACCESS_KEY", ""),
+		"",
+	)
+	usePathStyle := aws.Bool(config.Getenv("S3_USE_PATH_STYLE", "") == "true")
+
 	s3Session, err := session.NewSession(&aws.Config{
-		Endpoint: aws.String(config.Getenv("S3_ENDPOINT", "")),
-		Region:   aws.String(config.Getenv("S3_REGION", "")),
-		Credentials: credentials.NewStaticCredentials(
-			config.Getenv("S3_KEY_ID", ""),
-			config.Getenv("S3_ACCESS_KEY", ""),
-			"",
-		),
+		Endpoint:         endpoint,
+		Region:           region,
+		Credentials:      credentials,
+		S3ForcePathStyle: usePathStyle,
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
+	s3PublicSession, err := session.NewSession(&aws.Config{
+		Endpoint:         publicEndpoint,
+		Region:           region,
+		Credentials:      credentials,
+		S3ForcePathStyle: usePathStyle,
 	})
 
 	if err != nil {
@@ -44,6 +63,7 @@ func NewModule(config config.ConfigService) *StorageModule {
 
 	return &StorageModule{
 		s3:            s3.New(s3Session),
+		s3Public:      s3.New(s3PublicSession),
 		uploader:      s3manager.NewUploader(s3Session),
 		bucket:        config.Getenv("S3_BUCKET", ""),
 		enablePresign: config.Getenv("S3_ENABLE_PRESIGN", "false") == "true",

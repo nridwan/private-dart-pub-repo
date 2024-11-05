@@ -7,3 +7,5 @@ debug_app
 __debug*
 main.exe
 main
+docker-compose.yml
+/docker-data
