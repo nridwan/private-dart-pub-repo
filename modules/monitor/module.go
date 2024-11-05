@@ -35,7 +35,6 @@ var FxModule = fx.Module("Monitor", fx.Provide(NewModule), fx.Provide(provideMon
 
 func (module *MonitorModule) OnStart() error {
 	module.initOpentelemetry()
-	module.registerRoutes()
 	return nil
 }
 

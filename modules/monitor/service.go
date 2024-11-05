@@ -46,6 +46,10 @@ func mapToAttributes(attributes map[string]interface{}) []attribute.KeyValue {
 }
 
 func (service *monitorServiceImpl) StartTraceSpan(context context.Context, title string, attributes map[string]interface{}) (context.Context, MonitorSpan) {
+	if service.tracer == nil {
+		return context, trace.SpanFromContext(context)
+	}
+
 	return service.tracer.Start(context, title, trace.WithAttributes(mapToAttributes(attributes)...))
 }
 

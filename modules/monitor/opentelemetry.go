@@ -15,11 +15,21 @@ import (
 )
 
 func (module *MonitorModule) initOpentelemetry() {
-	module.tp = module.initTracer()
+	url := module.config.Getenv("OTLP_URL", "")
+	if url == "" {
+		return
+	}
+
+	module.tp = module.initTracer(url)
 	module.app.Use(otelfiber.Middleware())
 }
 
 func (module *MonitorModule) destroyOpentelemetry() {
+	url := module.config.Getenv("OTLP_URL", "")
+	if url == "" {
+		return
+	}
+
 	if err := module.tp.Shutdown(context.Background()); err != nil {
 		log.Printf("Error shutting down tracer provider: %v", err)
 	}
@@ -27,10 +37,11 @@ func (module *MonitorModule) destroyOpentelemetry() {
 	module.app.Use(otelfiber.Middleware())
 }
 
-func (module *MonitorModule) initTracer() *sdktrace.TracerProvider {
+func (module *MonitorModule) initTracer(url string) *sdktrace.TracerProvider {
+
 	exporter, err := otlptracehttp.New(
 		context.Background(),
-		otlptracehttp.WithEndpointURL(module.config.Getenv("OTLP_URL", "http://localhost:4318/v1/traces")),
+		otlptracehttp.WithEndpointURL(url),
 	)
 	if err != nil {
 		log.Fatal(err)
