@@ -8,3 +8,4 @@ README.md
 /docker-data
 .env
 .env.example
+/migrations

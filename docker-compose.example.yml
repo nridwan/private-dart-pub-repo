@@ -23,6 +23,16 @@ services:
       MINIO_ROOT_PASSWORD: MinioPwd
     command: server /data --console-address ":9001"
 
+  atlas:
+    image: arigaio/atlas:0.28.1
+    container_name: pubserver_migrator
+    depends_on:
+      - db
+    volumes:
+      - ./migrations:/migrations
+      - ./atlas.hcl:/atlas.hcl
+    command: migrate apply --url "postgres://pubadmin:PostgresPwd@db:5432/pubserver?sslmode=disable"
+
   app:
     build: .
     ports:
@@ -40,8 +50,8 @@ services:
       DB_PASSWORD: PostgresPwd
       DB_LOGGING: false
       # optional, if use this format, DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD will be ignored
-      # DATABASE_URL: postgres://pubadmin:PostgresPwd@db:5432/pubserver
-      DB_AUTOMIGRATION: true
+      # DATABASE_URL: postgres://pubadmin:PostgresPwd@db:5432/pubserver?sslmode=disable
+      DB_AUTOMIGRATION: false
 
       APP_HOST: "0.0.0.0"
       PORT: 4000
