@@ -199,7 +199,7 @@ func (service *userServiceImpl) Login(context context.Context, req *userdto.Logi
 	var user usermodel.UserModel
 	result := service.db.WithContext(spanContext).Where(emailWhereQuery, req.Email).First(&user)
 	if result.Error != nil {
-		err = result.Error
+		err = fiber.NewError(400, "Email and password doesn't match.")
 		return
 	}
 

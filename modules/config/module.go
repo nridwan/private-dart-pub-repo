@@ -14,7 +14,7 @@ type ConfigModule struct {
 func NewModule() *ConfigModule {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("No .env file provided, will use OS env only")
 	}
 	return &ConfigModule{}
 }
