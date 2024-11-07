@@ -11,7 +11,7 @@ import (
 type PubTokenModel struct {
 	base.BaseModel
 	Remarks   string               `json:"remarks" gorm:"not null;"`
-	Write     bool                 `json:"write" gorm:"not null;default:false"`
+	Write     *bool                `json:"write" gorm:"not null;default:false"`
 	ExpiredAt *time.Time           `json:"expired_at" gorm:"not null;"`
 	UserID    *uuid.UUID           `json:"user_id" gorm:"type:uuid;nullable;"`
 	User      *usermodel.UserModel `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`

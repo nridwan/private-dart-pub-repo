@@ -8,12 +8,13 @@ import (
 )
 
 type UserDTO struct {
-	ID        uuid.UUID  `json:"user_id" gorm:"type:uuid;not null;primaryKey;default:uuid_generate_v4()"`
-	Name      string     `json:"name" gorm:"not null;"`
-	Email     string     `json:"email" gorm:"not null;unique;"`
-	IsAdmin   bool       `json:"is_admin" gorm:"not null;unique;"`
-	CreatedAt *time.Time `json:"created_at,omitempty" gorm:"not null;"`
-	UpdatedAt *time.Time `json:"updated_at,omitempty" gorm:"not null;"`
+	ID        uuid.UUID  `json:"user_id"`
+	Name      string     `json:"name"`
+	Email     string     `json:"email"`
+	IsAdmin   bool       `json:"is_admin"`
+	CanWrite  bool       `json:"can_write"`
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
 func MapUserModelToDTO(model *usermodel.UserModel) *UserDTO {
@@ -22,6 +23,7 @@ func MapUserModelToDTO(model *usermodel.UserModel) *UserDTO {
 		Name:      model.Name,
 		Email:     model.Email,
 		IsAdmin:   model.IsAdmin,
+		CanWrite:  model.CanWrite,
 		CreatedAt: model.CreatedAt,
 		UpdatedAt: model.UpdatedAt,
 	}

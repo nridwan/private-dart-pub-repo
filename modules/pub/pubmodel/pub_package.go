@@ -8,7 +8,7 @@ import (
 
 type PubPackageModel struct {
 	Name      string            `json:"name" gorm:"not null;primaryKey;"`
-	Private   bool              `json:"private" gorm:"not null;default:true"`
+	Private   *bool             `json:"private" gorm:"not null;default:true"`
 	Versions  []PubVersionModel `json:"-" gorm:"foreignKey:PackageName;references:Name"`
 	CreatedAt *time.Time        `json:"created_at,omitempty" gorm:"not null;"`
 	UpdatedAt *time.Time        `json:"updated_at,omitempty" gorm:"not null;"`

@@ -78,7 +78,7 @@ func (service *pubServiceImpl) VersionList(context context.Context, packageName 
 		return nil, fiber.ErrNotFound
 	}
 
-	if pubPackage.Private && publicOnly {
+	if *pubPackage.Private && publicOnly {
 		return nil, fiber.ErrForbidden
 	}
 
@@ -111,7 +111,7 @@ func (service *pubServiceImpl) VersionDetail(context context.Context, packageNam
 		return nil, fiber.ErrNotFound
 	}
 
-	if pubPackage.Private && publicOnly {
+	if *pubPackage.Private && publicOnly {
 		return nil, fiber.ErrForbidden
 	}
 
@@ -382,7 +382,7 @@ func (service *pubServiceImpl) QueryVersionList(
 
 	result := service.db.WithContext(spanContext).First(&pubPackage, "name = ?", packageName)
 
-	if result.Error != nil || (pubPackage.Private && publicOnly) {
+	if result.Error != nil || (*pubPackage.Private && publicOnly) {
 		return nil, fiber.ErrNotFound
 	}
 
@@ -450,7 +450,7 @@ func (service *pubServiceImpl) QueryVersionDetail(context context.Context, packa
 
 	result := service.db.WithContext(spanContext).First(&pubPackage, "name = ?", packageName)
 
-	if result.Error != nil || (pubPackage.Private && publicOnly) {
+	if result.Error != nil || (*pubPackage.Private && publicOnly) {
 		return nil, fiber.ErrNotFound
 	}
 

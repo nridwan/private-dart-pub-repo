@@ -10,6 +10,8 @@ import (
 	"private-pub-repo/modules/jwt"
 	"private-pub-repo/modules/mail"
 	"private-pub-repo/modules/monitor"
+	"private-pub-repo/modules/pubtoken/pubtokendto"
+	"private-pub-repo/modules/pubtoken/pubtokenmodel"
 	"private-pub-repo/modules/user/userdto"
 	"private-pub-repo/modules/user/usermodel"
 	"private-pub-repo/utils"
@@ -41,7 +43,7 @@ type UserService interface {
 	Login(context context.Context, req *userdto.LoginDTO) (*userdto.LoginResponseDTO, error)
 	ForgotOtp(context context.Context, req *userdto.ForgotOtpDTO) (*userdto.ForgotOtpResponseDTO, error)
 	ForgotCreatePassword(context context.Context, req *userdto.ForgotCreatePasswordDTO) (bool, error)
-	RefreshToken(context context.Context, claims jwt.JwtClaim) (response *userdto.LoginResponseDTO, err error)
+	RefreshToken(context context.Context, claims jwt.JwtClaim, id uuid.UUID) (response *userdto.LoginResponseDTO, err error)
 	GenerateHashPassword(password string) (*string, error)
 }
 
@@ -114,9 +116,17 @@ func (service *userServiceImpl) Update(context context.Context, id uuid.UUID, up
 	}
 	user := usermodel.UserModel{BaseModel: base.BaseModel{ID: id}}
 	result := service.db.WithContext(spanContext).Model(&user).Updates(updateDTO)
+
 	if result.Error != nil {
 		return nil, result.Error
 	}
+
+	if updateDTO.CanWrite != nil && *updateDTO.CanWrite == false {
+		var token pubtokenmodel.PubTokenModel
+		noWrite := false
+		service.db.WithContext(spanContext).Model(&token).Where("user_id = ?", id).Updates(pubtokendto.UpdateTokenDTO{Write: &noWrite})
+	}
+
 	return service.Detail(context, id)
 }
 
@@ -127,7 +137,7 @@ func (service *userServiceImpl) List(context context.Context, req *appmodel.GetL
 	users := []usermodel.UserModel{}
 	query := service.db.WithContext(spanContext).Model(users)
 	if req.Search != "" {
-		query.Where("name ILIKE ?", "%"+req.Search+"%")
+		query.Where(service.db.Where("name ILIKE ?", "%"+req.Search+"%").Or("email ILIKE ?", "%"+req.Search+"%"))
 	}
 
 	var wg sync.WaitGroup
@@ -188,6 +198,16 @@ func (service *userServiceImpl) Delete(context context.Context, id uuid.UUID) er
 	defer span.End()
 	var user userdto.UserDTO
 	result := service.db.WithContext(spanContext).Delete(&user, id)
+
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
+	if result.Error == nil {
+		var token pubtokenmodel.PubTokenModel
+		service.db.WithContext(spanContext).Where("user_id = ?", id).Delete(&token)
+	}
+
 	return result.Error
 }
 
@@ -209,7 +229,8 @@ func (service *userServiceImpl) Login(context context.Context, req *userdto.Logi
 
 	response, err = service.jwtService.GenerateToken(user.ID, jwtIssuer, map[string]interface {
 	}{
-		"is_admin": user.IsAdmin,
+		"is_admin":  user.IsAdmin,
+		"can_write": user.CanWrite,
 	})
 	return
 }
@@ -319,9 +340,16 @@ func (service *userServiceImpl) ForgotCreatePassword(context context.Context, re
 	return
 }
 
-func (service *userServiceImpl) RefreshToken(context context.Context, claims jwt.JwtClaim) (response *userdto.LoginResponseDTO, err error) {
+func (service *userServiceImpl) RefreshToken(context context.Context, claims jwt.JwtClaim, id uuid.UUID) (response *userdto.LoginResponseDTO, err error) {
 	_, span := service.monitorService.StartTraceSpan(context, "UserService.RefreshToken", map[string]interface{}{})
 	defer span.End()
+
+	_, err = service.Detail(context, id)
+
+	if err != nil {
+		return
+	}
+
 	response, err = service.jwtService.Refresh(claims)
 	return
 }

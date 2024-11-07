@@ -60,8 +60,8 @@ func (module *DbModule) AddConfig(profName string, config *DbProfile) {
 	var err error
 	gormConfig := gorm.Config{}
 
-	if !config.Logging {
-		gormConfig.Logger = logger.Default.LogMode(logger.Silent)
+	if config.Logging {
+		gormConfig.Logger = logger.Default.LogMode(logger.Info)
 	}
 
 	if config.Connection == "mysql" {

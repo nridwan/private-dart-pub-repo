@@ -1,0 +1,1748 @@
+{
+  "info": {
+    "_postman_id": "6372bfd4-fe09-4bff-a7f2-d8c202e43bde",
+    "name": "Pub Server",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "18165262"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Forgot Password",
+          "item": [
+            {
+              "name": "Forgot Password OTP",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if(pm.response.code == 200) {",
+                      "    var responseBody = pm.response.json();",
+                      "",
+                      "    pm.environment.set(\"ACCESS_TOKEN\", responseBody.response_output.detail.access_token);",
+                      "    pm.environment.set(\"REFRESH_TOKEN\", responseBody.response_output.detail.refresh_token);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\t\"email\": \"admin@m8zn.work\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/users/forgot-password/otp",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["v1", "users", "forgot-password", "otp"]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n\t\"email\": \"admin@m8zn.work\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/v1/users/forgot-password/otp",
+                      "host": ["{{BASE_URL}}"],
+                      "path": ["v1", "users", "forgot-password", "otp"]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Date",
+                      "value": "Sat, 02 Nov 2024 11:53:53 GMT"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "116"
+                    },
+                    {
+                      "key": "X-Ratelimit-Limit",
+                      "value": "5"
+                    },
+                    {
+                      "key": "X-Ratelimit-Remaining",
+                      "value": "4"
+                    },
+                    {
+                      "key": "X-Ratelimit-Reset",
+                      "value": "60"
+                    },
+                    {
+                      "key": "Traceparent",
+                      "value": "00-4e6f62351127bc5297f76a3c907e272b-22b50db92b5b1a5d-01"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"response_schema\": {\n        \"response_code\": \"APISERVER-200\",\n        \"response_message\": \"SUCCESS\"\n    },\n    \"response_output\": {\n        \"detail\": true\n    }\n}"
+                }
+              ]
+            },
+            {
+              "name": "Create Password",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if(pm.response.code == 200) {",
+                      "    var responseBody = pm.response.json();",
+                      "",
+                      "    pm.environment.set(\"ACCESS_TOKEN\", responseBody.response_output.detail.access_token);",
+                      "    pm.environment.set(\"REFRESH_TOKEN\", responseBody.response_output.detail.refresh_token);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\t\"email\": \"admin@m8zn.work\",\n    \"otp\": \"445002\",\n    \"password\": \"Password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/users/forgot-password/create-password",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["v1", "users", "forgot-password", "create-password"]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n\t\"email\": \"admin@m8zn.work\",\n    \"otp\": \"321459\",\n    \"password\": \"Password2\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/v1/users/forgot-password/create-password",
+                      "host": ["{{BASE_URL}}"],
+                      "path": [
+                        "v1",
+                        "users",
+                        "forgot-password",
+                        "create-password"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Date",
+                      "value": "Sat, 02 Nov 2024 11:49:25 GMT"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "116"
+                    },
+                    {
+                      "key": "X-Ratelimit-Limit",
+                      "value": "5"
+                    },
+                    {
+                      "key": "X-Ratelimit-Remaining",
+                      "value": "2"
+                    },
+                    {
+                      "key": "X-Ratelimit-Reset",
+                      "value": "37"
+                    },
+                    {
+                      "key": "Traceparent",
+                      "value": "00-ed17c63d2370bb82a0760c472d320d90-a2b8cd1573f407b9-01"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"response_schema\": {\n        \"response_code\": \"APISERVER-200\",\n        \"response_message\": \"SUCCESS\"\n    },\n    \"response_output\": {\n        \"detail\": true\n    }\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ACCESS_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Name\",\n    \"email\": \"a@abcd.com\",\n    \"password\": \"Password\",\n    \"can_write\": true,\n    \"is_admin\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/v1/users",
+              "host": ["{{BASE_URL}}"],
+              "path": ["v1", "users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ACCESS_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Name 2\",\n    \"email\": \"a@abcde.com\",\n    \"password\": \"Password\", //disabled for security right now\n    \"can_write\": true,\n    \"is_admin\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/v1/users/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["v1", "users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "c4310526-a727-42ed-bd91-72f4d58b5bb4"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ACCESS_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/v1/users?page=1&limit=10&search",
+              "host": ["{{BASE_URL}}"],
+              "path": ["v1", "users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Detail",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ACCESS_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/v1/users/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["v1", "users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "793f6b2d-5841-421e-9fe0-7d40f3c4766b"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ACCESS_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/v1/users/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["v1", "users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "793f6b2d-5841-421e-9fe0-7d40f3c4766b"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if(pm.response.code == 200) {",
+                  "    var responseBody = pm.response.json();",
+                  "",
+                  "    pm.environment.set(\"ACCESS_TOKEN\", responseBody.response_output.detail.access_token);",
+                  "    pm.environment.set(\"REFRESH_TOKEN\", responseBody.response_output.detail.refresh_token);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"email\": \"admin@m8zn.work\",\n\t\"password\": \"Password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/v1/users/login",
+              "host": ["{{BASE_URL}}"],
+              "path": ["v1", "users", "login"]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\t\"email\": \"admin@m8zn.work\",\n\t\"password\": \"Password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/users/login",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["v1", "users", "login"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Sun, 27 Oct 2024 15:35:18 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "707"
+                },
+                {
+                  "key": "Traceparent",
+                  "value": "00-df49f03a8190e9063480347c3f6790d8-bfa8e6f8a45e0b95-01"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"response_schema\": {\n        \"response_code\": \"APISERVER-200\",\n        \"response_message\": \"SUCCESS\"\n    },\n    \"response_output\": {\n        \"detail\": {\n            \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYXBwIl0sImV4cCI6MTczMDA0MzYxOSwiaWF0IjoxNzMwMDQzMzE5LCJpc19hZG1pbiI6dHJ1ZSwiaXNzIjoiYXBwVXNlciIsIm5iZiI6MTczMDA0MzMxOSwic3ViIjoiNmQ5YjczNTQtYjEyNy00NmRjLWJjYWUtZmYyODljMmJkY2FjIn0.LeDk1ZUR2r_CgaBoppkq1XqkY5wfiecz2e3R6KCnzJI\",\n            \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidG9rZW5fcmVmcmVzaCJdLCJleHAiOjE3MzAwNDM5MTksImlhdCI6MTczMDA0MzMxOSwiaXNfYWRtaW4iOnRydWUsImlzcyI6ImFwcFVzZXIiLCJuYmYiOjE3MzAwNDMzMTksInN1YiI6IjZkOWI3MzU0LWIxMjctNDZkYy1iY2FlLWZmMjg5YzJiZGNhYyJ9.yL9-gLJN3RmyXbZ9xlMM1ix-nbpsvJYsOuhxD40wC5E\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if(pm.response.code == 200) {",
+                  "    var responseBody = pm.response.json();",
+                  "",
+                  "    pm.environment.set(\"ACCESS_TOKEN\", responseBody.response_output.detail.access_token);",
+                  "    pm.environment.set(\"REFRESH_TOKEN\", responseBody.response_output.detail.refresh_token);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{REFRESH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/v1/users/refresh",
+              "host": ["{{BASE_URL}}"],
+              "path": ["v1", "users", "refresh"]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/users/refresh",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["v1", "users", "refresh"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Sun, 27 Oct 2024 15:35:21 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "707"
+                },
+                {
+                  "key": "Traceparent",
+                  "value": "00-70a4bda51c6486afd0d0139d6de9e3d2-59abc0b0ee716a70-01"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"response_schema\": {\n        \"response_code\": \"APISERVER-200\",\n        \"response_message\": \"SUCCESS\"\n    },\n    \"response_output\": {\n        \"detail\": {\n            \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYXBwIl0sImV4cCI6MTczMDA0MzYyMiwiaWF0IjoxNzMwMDQzMzIyLCJpc19hZG1pbiI6dHJ1ZSwiaXNzIjoiYXBwVXNlciIsIm5iZiI6MTczMDA0MzMyMiwic3ViIjoiNmQ5YjczNTQtYjEyNy00NmRjLWJjYWUtZmYyODljMmJkY2FjIn0.ZrvU-Fw4tLsinTNsCgQIpWKCVnzAA9-TUMrrsX2dKM8\",\n            \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidG9rZW5fcmVmcmVzaCJdLCJleHAiOjE3MzAwNDM5MjIsImlhdCI6MTczMDA0MzMyMiwiaXNfYWRtaW4iOnRydWUsImlzcyI6ImFwcFVzZXIiLCJuYmYiOjE3MzAwNDMzMjIsInN1YiI6IjZkOWI3MzU0LWIxMjctNDZkYy1iY2FlLWZmMjg5YzJiZGNhYyJ9.-ubSJQbuD2FKbXEkRCn1Lwx2UPzhAGRaWS3Bw8DxXyM\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ACCESS_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/v1/users/profile",
+              "host": ["{{BASE_URL}}"],
+              "path": ["v1", "users", "profile"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pub Token",
+      "item": [
+        {
+          "name": "Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if(pm.response.code == 200) {\r",
+                  "    var responseBody = pm.response.json();\r",
+                  "\r",
+                  "    pm.environment.set(\"PUB_API_TOKEN\", responseBody.response_output.detail);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ACCESS_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"remarks\": \"Test\",\n    \"write\": true,\n    \"expired_at\": \"2024-10-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/v1/pubtoken",
+              "host": ["{{BASE_URL}}"],
+              "path": ["v1", "pubtoken"]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"remarks\": \"Test\",\n    \"write\": true,\n    \"expired_at\": \"2024-10-27\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/pubtoken",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["v1", "pubtoken"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Sun, 27 Oct 2024 15:35:53 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "366"
+                },
+                {
+                  "key": "Traceparent",
+                  "value": "00-cf6f022e05cd9e524f30ec4e114b7bd6-ae6835f61746c049-01"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"response_schema\": {\n        \"response_code\": \"APISERVER-200\",\n        \"response_message\": \"SUCCESS\"\n    },\n    \"response_output\": {\n        \"detail\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYXBwIl0sImV4cCI6MTczMDA3MzU5OSwiaWF0IjoxNzMwMDQzMzUzLCJpc3MiOiJwdWJUb2tlbiIsIm5iZiI6MTczMDA0MzM1Mywic3ViIjoiZTUzYTA0MmMtZGIwMi00NWNkLTk5YmItNzAwNjU2N2U3YzdlIn0.S2OKHuTWjZByezTCWGWvliRxbsBB21HWK99kIIJhgAI\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "List",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ACCESS_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/v1/pubtoken?page=1&limit=10&search",
+              "host": ["{{BASE_URL}}"],
+              "path": ["v1", "pubtoken"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/pubtoken?page=1&limit=1&search",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["v1", "pubtoken"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "1"
+                    },
+                    {
+                      "key": "search",
+                      "value": null
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Sun, 27 Oct 2024 15:36:59 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "440"
+                },
+                {
+                  "key": "Traceparent",
+                  "value": "00-1992e6435f3d795fd35c5db00e7f5ebf-4bb42a1571500cb7-01"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"response_schema\": {\n        \"response_code\": \"APISERVER-200\",\n        \"response_message\": \"SUCCESS\"\n    },\n    \"response_output\": {\n        \"list\": {\n            \"pagination\": {\n                \"page\": 1,\n                \"total\": 1,\n                \"size\": 1\n            },\n            \"content\": [\n                {\n                    \"id\": \"e53a042c-db02-45cd-99bb-7006567e7c7e\",\n                    \"created_at\": \"2024-10-27T22:35:53.588041+07:00\",\n                    \"updated_at\": \"2024-10-27T22:35:53.588041+07:00\",\n                    \"remarks\": \"Test\",\n                    \"write\": true,\n                    \"expired_at\": \"2024-10-28T06:59:59+07:00\",\n                    \"user_id\": \"6d9b7354-b127-46dc-bcae-ff289c2bdcac\",\n                    \"User\": null\n                }\n            ]\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Detail",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ACCESS_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/v1/pubtoken/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["v1", "pubtoken", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "793f6b2d-5841-421e-9fe0-7d40f3c4766b"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/pubtoken/:id",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["v1", "pubtoken", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "e53a042c-db02-45cd-99bb-7006567e7c7e"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Sun, 27 Oct 2024 15:37:22 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "385"
+                },
+                {
+                  "key": "Traceparent",
+                  "value": "00-d1f4dd1babdbde4c943a061b54ae3a1f-48b044bf647e04ca-01"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"response_schema\": {\n        \"response_code\": \"APISERVER-200\",\n        \"response_message\": \"SUCCESS\"\n    },\n    \"response_output\": {\n        \"detail\": {\n            \"id\": \"e53a042c-db02-45cd-99bb-7006567e7c7e\",\n            \"created_at\": \"2024-10-27T22:35:53.588041+07:00\",\n            \"updated_at\": \"2024-10-27T22:35:53.588041+07:00\",\n            \"remarks\": \"Test\",\n            \"write\": true,\n            \"expired_at\": \"2024-10-28T06:59:59+07:00\",\n            \"user_id\": \"6d9b7354-b127-46dc-bcae-ff289c2bdcac\",\n            \"User\": null\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ACCESS_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/v1/pubtoken/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["v1", "pubtoken", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "0baf0da5-4be4-4e09-8332-d886fdc0934e"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/pubtoken/:id",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["v1", "pubtoken", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "e53a042c-db02-45cd-99bb-7006567e7c7e"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Sun, 27 Oct 2024 15:37:22 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "385"
+                },
+                {
+                  "key": "Traceparent",
+                  "value": "00-d1f4dd1babdbde4c943a061b54ae3a1f-48b044bf647e04ca-01"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"response_schema\": {\n        \"response_code\": \"APISERVER-200\",\n        \"response_message\": \"SUCCESS\"\n    },\n    \"response_output\": {\n        \"detail\": {\n            \"id\": \"e53a042c-db02-45cd-99bb-7006567e7c7e\",\n            \"created_at\": \"2024-10-27T22:35:53.588041+07:00\",\n            \"updated_at\": \"2024-10-27T22:35:53.588041+07:00\",\n            \"remarks\": \"Test\",\n            \"write\": true,\n            \"expired_at\": \"2024-10-28T06:59:59+07:00\",\n            \"user_id\": \"6d9b7354-b127-46dc-bcae-ff289c2bdcac\",\n            \"User\": null\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ACCESS_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"write\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/v1/pubtoken/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["v1", "pubtoken", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "881fb87e-ca8d-4645-af27-42e7bafdb59e"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"write\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/pubtoken/:id",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["v1", "pubtoken", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "881fb87e-ca8d-4645-af27-42e7bafdb59e"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Thu, 07 Nov 2024 02:58:45 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "385"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"response_schema\": {\n        \"response_code\": \"APISERVER-200\",\n        \"response_message\": \"SUCCESS\"\n    },\n    \"response_output\": {\n        \"detail\": {\n            \"id\": \"881fb87e-ca8d-4645-af27-42e7bafdb59e\",\n            \"created_at\": \"2024-11-07T09:57:21.140731+07:00\",\n            \"updated_at\": \"2024-11-07T09:57:21.140731+07:00\",\n            \"remarks\": \"Test\",\n            \"write\": true,\n            \"expired_at\": \"2025-01-01T06:59:59+07:00\",\n            \"user_id\": \"e749fdd3-1fa9-483b-9e40-558eaa3fb113\",\n            \"User\": null\n        }\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pub",
+      "item": [
+        {
+          "name": "API",
+          "item": [
+            {
+              "name": "Package Version List",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/pub/api/packages/:package",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["v1", "pub", "api", "packages", ":package"],
+                  "variable": [
+                    {
+                      "key": "package",
+                      "value": "dio"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}/v1/pub/api/packages/:package",
+                      "host": ["{{BASE_URL}}"],
+                      "path": ["v1", "pub", "api", "packages", ":package"],
+                      "variable": [
+                        {
+                          "key": "package",
+                          "value": "dio"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Date",
+                      "value": "Mon, 28 Oct 2024 15:54:31 GMT"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/vnd.pub.v2+json"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "262"
+                    },
+                    {
+                      "key": "Traceparent",
+                      "value": "00-71896e696cf7c99ce917491611eec49c-4898f283fdbf0598-01"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"name\": \"dio\",\n    \"latest\": {\n        \"version\": \"5.6.0\",\n        \"archive_url\": \"http://localhost:3000/v1/pub/packages/dio/versions/5.6.0.tar.gz\",\n        \"pubspec\": {}\n    },\n    \"versions\": [\n        {\n            \"version\": \"5.6.0\",\n            \"archive_url\": \"http://localhost:3000/v1/pub/packages/dio/versions/5.6.0.tar.gz\",\n            \"pubspec\": {}\n        }\n    ]\n}"
+                }
+              ]
+            },
+            {
+              "name": "Package Version Detail",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/pub/api/packages/:package/versions/:version",
+                  "host": ["{{BASE_URL}}"],
+                  "path": [
+                    "v1",
+                    "pub",
+                    "api",
+                    "packages",
+                    ":package",
+                    "versions",
+                    ":version"
+                  ],
+                  "variable": [
+                    {
+                      "key": "package",
+                      "value": "dio"
+                    },
+                    {
+                      "key": "version",
+                      "value": "5.6.0"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}/v1/pub/api/packages/:package/versions/:version",
+                      "host": ["{{BASE_URL}}"],
+                      "path": [
+                        "v1",
+                        "pub",
+                        "api",
+                        "packages",
+                        ":package",
+                        "versions",
+                        ":version"
+                      ],
+                      "variable": [
+                        {
+                          "key": "package",
+                          "value": "dio"
+                        },
+                        {
+                          "key": "version",
+                          "value": "5.6.0"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Date",
+                      "value": "Mon, 28 Oct 2024 15:54:42 GMT"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/vnd.pub.v2+json"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "112"
+                    },
+                    {
+                      "key": "Traceparent",
+                      "value": "00-26732e3919c3abf63afaaaa396ade21e-70c428724a78edc4-01"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"version\": \"5.6.0\",\n    \"archive_url\": \"http://localhost:3000/v1/pub/packages/dio/versions/5.6.0.tar.gz\",\n    \"pubspec\": {}\n}"
+                }
+              ]
+            },
+            {
+              "name": "Get Upload URL",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/pub/api/packages/versions/new",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["v1", "pub", "api", "packages", "versions", "new"]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}/v1/pub/api/packages/versions/new",
+                      "host": ["{{BASE_URL}}"],
+                      "path": [
+                        "v1",
+                        "pub",
+                        "api",
+                        "packages",
+                        "versions",
+                        "new"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Date",
+                      "value": "Mon, 28 Oct 2024 16:10:02 GMT"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/vnd.pub.v2+json"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "82"
+                    },
+                    {
+                      "key": "Traceparent",
+                      "value": "00-a136db413ea056ec9527fd3e725363e1-2a9aba970c12bbc2-01"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"fields\": {},\n    \"url\": \"http://localhost:3000/v1/pub/api/packages/versions/newUpload\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Upload",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": "/C:/Users/xa18r/Downloads/dio-5.7.0.tar.gz"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/pub/api/packages/versions/newUpload",
+                  "host": ["{{BASE_URL}}"],
+                  "path": [
+                    "v1",
+                    "pub",
+                    "api",
+                    "packages",
+                    "versions",
+                    "newUpload"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "file",
+                          "type": "file",
+                          "src": "/C:/Users/xa18r/Downloads/dio-5.7.0.tar.gz"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/v1/pub/api/packages/versions/newUpload",
+                      "host": ["{{BASE_URL}}"],
+                      "path": [
+                        "v1",
+                        "pub",
+                        "api",
+                        "packages",
+                        "versions",
+                        "newUpload"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Date",
+                      "value": "Mon, 28 Oct 2024 17:05:52 GMT"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/vnd.pub.v2+json"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "56"
+                    },
+                    {
+                      "key": "Traceparent",
+                      "value": "00-25e8b39e38f4c73947fed781a234d833-da823a771c3d12f4-01"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"success\": {\n        \"message\": \"Successfully uploaded package.\"\n    }\n}"
+                }
+              ]
+            },
+            {
+              "name": "Package Version Download",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/pub/packages/:package/versions/:version.tar.gz",
+                  "host": ["{{BASE_URL}}"],
+                  "path": [
+                    "v1",
+                    "pub",
+                    "packages",
+                    ":package",
+                    "versions",
+                    ":version.tar.gz"
+                  ],
+                  "variable": [
+                    {
+                      "key": "package",
+                      "value": "dio"
+                    },
+                    {
+                      "key": "version",
+                      "value": "5.7.0"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}/v1/pub/packages/:package/versions/:version.tar.gz",
+                      "host": ["{{BASE_URL}}"],
+                      "path": [
+                        "v1",
+                        "pub",
+                        "packages",
+                        ":package",
+                        "versions",
+                        ":version.tar.gz"
+                      ],
+                      "variable": [
+                        {
+                          "key": "package",
+                          "value": "dio"
+                        },
+                        {
+                          "key": "version",
+                          "value": "5.7.0"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Found",
+                  "code": 302,
+                  "_postman_previewlanguage": "plain",
+                  "header": [
+                    {
+                      "key": "Date",
+                      "value": "Thu, 31 Oct 2024 14:58:22 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "0"
+                    },
+                    {
+                      "key": "Location",
+                      "value": "https://some-s3-url/pub/packages/dio/versions/5.7.0.tar.gz?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=123123123123123%2F20241031%2Foss-ap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20241031T145822Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=0260cba08914756595741395fcfaccd7a972285ca79a1eece577f256dd0af377"
+                    },
+                    {
+                      "key": "Traceparent",
+                      "value": "00-b98491829bca3e4437bcb32249d29626-f3fb06a635d3e182-01"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            }
+          ],
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{PUB_API_TOKEN}}",
+                "type": "string"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [""]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Query",
+          "item": [
+            {
+              "name": "Package List",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/pub/query/packages?page=1&limit=10",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["v1", "pub", "query", "packages"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}/v1/pub/query/packages?page=1&limit=10",
+                      "host": ["{{BASE_URL}}"],
+                      "path": ["v1", "pub", "query", "packages"],
+                      "query": [
+                        {
+                          "key": "page",
+                          "value": "1"
+                        },
+                        {
+                          "key": "limit",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Date",
+                      "value": "Thu, 31 Oct 2024 15:16:42 GMT"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "431"
+                    },
+                    {
+                      "key": "Traceparent",
+                      "value": "00-8c8e0796bf3fc452fe768f14fb410a1f-3139652238085c04-01"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"response_schema\": {\n        \"response_code\": \"APISERVER-200\",\n        \"response_message\": \"SUCCESS\"\n    },\n    \"response_output\": {\n        \"list\": {\n            \"pagination\": {\n                \"page\": 1,\n                \"total\": 2,\n                \"size\": 10\n            },\n            \"content\": [\n                {\n                    \"name\": \"dio\",\n                    \"private\": false,\n                    \"created_at\": \"2024-10-27T22:55:21.614126+07:00\",\n                    \"updated_at\": \"2024-10-27T22:55:21.614126+07:00\"\n                }\n            ]\n        }\n    }\n}"
+                }
+              ]
+            },
+            {
+              "name": "Update Package",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"private\": false\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/pub/query/packages/:package",
+                  "host": ["{{BASE_URL}}"],
+                  "path": ["v1", "pub", "query", "packages", ":package"],
+                  "variable": [
+                    {
+                      "key": "package",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"private\": true\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}/v1/pub/query/packages/dio",
+                      "host": ["{{BASE_URL}}"],
+                      "path": ["v1", "pub", "query", "packages", "dio"]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Date",
+                      "value": "Thu, 31 Oct 2024 16:05:46 GMT"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/vnd.pub.v2+json"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "29"
+                    },
+                    {
+                      "key": "Traceparent",
+                      "value": "00-79d08de0103485a952711cc923fccbe6-b6349a696c49df12-01"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"name\": \"dio\",\n    \"private\": true\n}"
+                }
+              ]
+            },
+            {
+              "name": "Version List",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/pub/query/packages/:package/versions?page=1&limit=10",
+                  "host": ["{{BASE_URL}}"],
+                  "path": [
+                    "v1",
+                    "pub",
+                    "query",
+                    "packages",
+                    ":package",
+                    "versions"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "package",
+                      "value": "dio"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}/v1/pub/query/packages/:package/versions?page=1&limit=10",
+                      "host": ["{{BASE_URL}}"],
+                      "path": [
+                        "v1",
+                        "pub",
+                        "query",
+                        "packages",
+                        ":package",
+                        "versions"
+                      ],
+                      "query": [
+                        {
+                          "key": "page",
+                          "value": "1"
+                        },
+                        {
+                          "key": "limit",
+                          "value": "10"
+                        }
+                      ],
+                      "variable": [
+                        {
+                          "key": "package",
+                          "value": "dio"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Date",
+                      "value": "Thu, 31 Oct 2024 15:56:26 GMT"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "777"
+                    },
+                    {
+                      "key": "Traceparent",
+                      "value": "00-b6d79829c8f376201b908ba10d7783e7-b742acd275756bbd-01"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"response_schema\": {\n        \"response_code\": \"APISERVER-200\",\n        \"response_message\": \"SUCCESS\"\n    },\n    \"response_output\": {\n        \"list\": {\n            \"pagination\": {\n                \"page\": 1,\n                \"total\": 2,\n                \"size\": 10\n            },\n            \"content\": [\n                {\n                    \"package_name\": \"dio\",\n                    \"version\": \"5.7.0\",\n                    \"version_number_major\": 0,\n                    \"version_number_minor\": 0,\n                    \"version_number_patch\": 0,\n                    \"prerelease\": false,\n                    \"pubspec\": null,\n                    \"user_id\": null,\n                    \"Uploader\": null,\n                    \"readme\": null,\n                    \"changelog\": null,\n                    \"created_at\": \"2024-10-29T00:08:41.465804+07:00\",\n                    \"updated_at\": \"2024-10-29T00:08:41.465804+07:00\"\n                },\n                {\n                    \"package_name\": \"dio\",\n                    \"version\": \"5.6.0\",\n                    \"version_number_major\": 0,\n                    \"version_number_minor\": 0,\n                    \"version_number_patch\": 0,\n                    \"prerelease\": false,\n                    \"pubspec\": null,\n                    \"user_id\": null,\n                    \"Uploader\": null,\n                    \"readme\": null,\n                    \"changelog\": null,\n                    \"created_at\": \"2024-10-29T00:08:41.465+07:00\",\n                    \"updated_at\": \"2024-10-29T00:08:41.465+07:00\"\n                }\n            ]\n        }\n    }\n}"
+                }
+              ]
+            },
+            {
+              "name": "Version Detail",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}/v1/pub/query/packages/:package/versions/:version?page=1&limit=10",
+                  "host": ["{{BASE_URL}}"],
+                  "path": [
+                    "v1",
+                    "pub",
+                    "query",
+                    "packages",
+                    ":package",
+                    "versions",
+                    ":version"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "package",
+                      "value": "dio"
+                    },
+                    {
+                      "key": "version",
+                      "value": "5.7.0"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}/v1/pub/query/packages/:package/versions/:version",
+                      "host": ["{{BASE_URL}}"],
+                      "path": [
+                        "v1",
+                        "pub",
+                        "query",
+                        "packages",
+                        ":package",
+                        "versions",
+                        ":version"
+                      ],
+                      "variable": [
+                        {
+                          "key": "package",
+                          "value": "dio"
+                        },
+                        {
+                          "key": "version",
+                          "value": "5.7.0"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Date",
+                      "value": "Thu, 31 Oct 2024 16:03:51 GMT"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "44559"
+                    },
+                    {
+                      "key": "Traceparent",
+                      "value": "00-d88cf9499d17ee1591edacce3f987ffa-01c1d58ab6f5842c-01"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"response_schema\": {\n        \"response_code\": \"APISERVER-200\",\n        \"response_message\": \"SUCCESS\"\n    },\n    \"response_output\": {\n        \"detail\": {\n            \"package_name\": \"dio\",\n            \"version\": \"5.7.0\",\n            \"version_number_major\": 5,\n            \"version_number_minor\": 7,\n            \"version_number_patch\": 0,\n            \"prerelease\": false,\n            \"pubspec\": {\n                \"name\": \"dio\",\n                \"topics\": [\n                    \"dio\",\n                    \"http\",\n                    \"network\",\n                    \"interceptor\",\n                    \"middleware\"\n                ],\n                \"version\": \"5.7.0\",\n                \"homepage\": \"https://github.com/cfug/dio\",\n                \"repository\": \"https://github.com/cfug/dio/blob/main/dio\",\n                \"description\": \"A powerful HTTP networking package,\\nsupports Interceptors,\\nAborting and canceling a request,\\nCustom adapters, Transformers, etc.\\n\",\n                \"environment\": {\n                    \"sdk\": \">=2.18.0 <4.0.0\"\n                },\n                \"dependencies\": {\n                    \"meta\": \"^1.5.0\",\n                    \"path\": \"^1.8.0\",\n                    \"async\": \"^2.8.2\",\n                    \"http_parser\": \"^4.0.0\",\n                    \"dio_web_adapter\": \">=1.0.0 <3.0.0\"\n                },\n                \"issue_tracker\": \"https://github.com/cfug/dio/issues\",\n                \"dev_dependencies\": {\n                    \"test\": \"^1.5.1\",\n                    \"lints\": \"any\",\n                    \"crypto\": \"^3.0.2\",\n                    \"mockito\": \"^5.2.0\",\n                    \"coverage\": \"^1.0.3\",\n                    \"dio_test\": {\n                        \"git\": {\n                            \"url\": \"https://github.com/cfug/dio\",\n                            \"path\": \"dio_test\"\n                        }\n                    },\n                    \"build_runner\": \"any\"\n                }\n            },\n            \"user_id\": \"6d9b7354-b127-46dc-bcae-ff289c2bdcac\",\n            \"Uploader\": null,\n            \"readme\": \"# dio\\n\\n[![Pub](https://img.shields.io/pub/v/dio.svg)](https://pub.dev/packages/dio)\\n[![Dev](https://img.shields.io/pub/v/dio.svg?label=dev&include_prereleases)](https://pub.dev/packages/dio)\\n\\nLanguage: English | [简体中文](README-ZH.md)\\n\\nA powerful HTTP networking package for Dart/Flutter,\\nsupports Global configuration, Interceptors, FormData,\\nRequest cancellation, File uploading/downloading,\\nTimeout, Custom adapters, Transformers, etc. \\n\\n> Don't forget to add [#dio](https://pub.dev/packages?q=topic%3Adio)\\n> topic to your published dio related packages!\\n> See more: https://dart.dev/tools/pub/pubspec#topics\\n\\n<details>\\n  <summary>Table of content</summary>\\n\\n<!-- TOC -->\\n* [dio](#dio)\\n  * [Get started](#get-started)\\n    * [Install](#install)\\n    * [Super simple to use](#super-simple-to-use)\\n  * [Awesome dio](#awesome-dio)\\n    * [Plugins](#plugins)\\n  * [Examples](#examples)\\n  * [Dio APIs](#dio-apis)\\n    * [Creating an instance and set default configs.](#creating-an-instance-and-set-default-configs)\\n    * [Request Options](#request-options)\\n    * [Response](#response)\\n    * [Interceptors](#interceptors)\\n      * [Resolve and reject the request](#resolve-and-reject-the-request)\\n      * [QueuedInterceptor](#queuedinterceptor)\\n        * [Example](#example)\\n      * [LogInterceptor](#loginterceptor)\\n      * [Dart](#dart)\\n      * [Flutter](#flutter)\\n      * [Custom Interceptor](#custom-interceptor)\\n  * [Handling Errors](#handling-errors)\\n    * [DioException](#dioexception)\\n    * [DioExceptionType](#dioexceptiontype)\\n  * [Using application/x-www-form-urlencoded format](#using-applicationx-www-form-urlencoded-format)\\n  * [Sending FormData](#sending-formdata)\\n    * [Multiple files upload](#multiple-files-upload)\\n    * [Reuse `FormData`s and `MultipartFile`s](#reuse-formdatas-and-multipartfiles)\\n  * [Transformer](#transformer)\\n    * [Transformer example](#transformer-example)\\n  * [HttpClientAdapter](#httpclientadapter)\\n    * [Using proxy](#using-proxy)\\n    * [HTTPS certificate verification](#https-certificate-verification)\\n  * [HTTP/2 support](#http2-support)\\n  * [Cancellation](#cancellation)\\n  * [Extends Dio class](#extends-dio-class)\\n  * [Cross-Origin Resource Sharing on Web (CORS)](#cross-origin-resource-sharing-on-web-cors)\\n<!-- TOC -->\\n</details>\\n\\n## Get started\\n\\n### Install\\n\\nAdd the `dio` package to your\\n[pubspec dependencies](https://pub.dev/packages/dio/install).\\n\\n**Before you upgrade: Breaking changes might happen in major and minor versions of packages.<br/>\\nSee the [Migration Guide][] for the complete breaking changes list.**\\n\\n[Migration Guide]: https://pub.dev/documentation/dio/latest/topics/Migration%20Guide-topic.html\\n\\n### Super simple to use\\n\\n```dart\\nimport 'package:dio/dio.dart';\\n\\nfinal dio = Dio();\\n\\nvoid getHttp() async {\\n  final response = await dio.get('https://dart.dev');\\n  print(response);\\n}\\n```\\n\\n## Awesome dio\\n\\n🎉 A curated list of awesome things related to dio.\\n\\n### Plugins\\n\\n[Plugins](https://pub.dev/documentation/dio/latest/topics/Plugins-topic.html)\\n\\nWelcome to submit third-party plugins and related libraries\\nin [here](https://github.com/cfug/dio/issues/347).\\n\\n## Examples\\n\\nPerforming a `GET` request:\\n\\n```dart\\nimport 'package:dio/dio.dart';\\n\\nfinal dio = Dio();\\n\\nvoid request() async {\\n  Response response;\\n  response = await dio.get('/test?id=12&name=dio');\\n  print(response.data.toString());\\n  // The below request is the same as above.\\n  response = await dio.get(\\n    '/test',\\n    queryParameters: {'id': 12, 'name': 'dio'},\\n  );\\n  print(response.data.toString());\\n}\\n```\\n\\nPerforming a `POST` request:\\n\\n```dart\\nresponse = await dio.post('/test', data: {'id': 12, 'name': 'dio'});\\n```\\n\\nPerforming multiple concurrent requests:\\n\\n```dart\\nresponse = await Future.wait([dio.post('/info'), dio.get('/token')]);\\n```\\n\\nDownloading a file:\\n\\n```dart\\nresponse = await dio.download(\\n  'https://pub.dev/',\\n  (await getTemporaryDirectory()).path + 'pub.html',\\n);\\n```\\n\\nGet response stream:\\n\\n```dart\\nfinal rs = await dio.get(\\n  url,\\n  options: Options(responseType: ResponseType.stream), // Set the response type to `stream`.\\n);\\nprint(rs.data.stream); // Response stream.\\n```\\n\\nGet response with bytes:\\n\\n```dart\\nfinal rs = await Dio().get<List<int>>(\\n  url,\\n  options: Options(responseType: ResponseType.bytes), // Set the response type to `bytes`.\\n);\\nprint(rs.data); // Type: List<int>.\\n```\\n\\nSending a `FormData`:\\n\\n```dart\\nfinal formData = FormData.fromMap({\\n  'name': 'dio',\\n  'date': DateTime.now().toIso8601String(),\\n});\\nfinal response = await dio.post('/info', data: formData);\\n```\\n\\nUploading multiple files to server by FormData:\\n\\n```dart\\nfinal formData = FormData.fromMap({\\n  'name': 'dio',\\n  'date': DateTime.now().toIso8601String(),\\n  'file': await MultipartFile.fromFile('./text.txt', filename: 'upload.txt'),\\n  'files': [\\n    await MultipartFile.fromFile('./text1.txt', filename: 'text1.txt'),\\n    await MultipartFile.fromFile('./text2.txt', filename: 'text2.txt'),\\n  ]\\n});\\nfinal response = await dio.post('/info', data: formData);\\n```\\n\\nListening the uploading progress:\\n\\n```dart\\nfinal response = await dio.post(\\n  'https://www.dtworkroom.com/doris/1/2.0.0/test',\\n  data: {'aa': 'bb' * 22},\\n  onSendProgress: (int sent, int total) {\\n    print('$sent $total');\\n  },\\n);\\n```\\n\\nPost binary data with Stream:\\n\\n```dart\\n// Binary data\\nfinal postData = <int>[0, 1, 2];\\nawait dio.post(\\n  url,\\n  data: Stream.fromIterable(postData.map((e) => [e])), // Creates a Stream<List<int>>.\\n  options: Options(\\n    headers: {\\n      Headers.contentLengthHeader: postData.length, // Set the content-length.\\n    },\\n  ),\\n);\\n```\\n\\nNote: `content-length` must be set if you want to subscribe to the sending progress.\\n\\nSee all examples code [here](example).\\n\\n## Dio APIs\\n\\n### Creating an instance and set default configs.\\n\\n> It is recommended to use a singleton of `Dio` in projects, which can manage configurations like headers, base urls,\\n> and timeouts consistently.\\n> Here is an [example](../example_flutter_app) that use a singleton in Flutter.\\n\\nYou can create instance of Dio with an optional `BaseOptions` object:\\n\\n```dart\\nfinal dio = Dio(); // With default `Options`.\\n\\nvoid configureDio() {\\n  // Set default configs\\n  dio.options.baseUrl = 'https://api.pub.dev';\\n  dio.options.connectTimeout = Duration(seconds: 5);\\n  dio.options.receiveTimeout = Duration(seconds: 3);\\n\\n  // Or create `Dio` with a `BaseOptions` instance.\\n  final options = BaseOptions(\\n    baseUrl: 'https://api.pub.dev',\\n    connectTimeout: Duration(seconds: 5),\\n    receiveTimeout: Duration(seconds: 3),\\n  );\\n  final anotherDio = Dio(options);\\n}\\n```\\n\\nThe core API in Dio instance is:\\n\\n```dart\\nFuture<Response<T>> request<T>(\\n  String path, {\\n  Object? data,\\n  Map<String, dynamic>? queryParameters,\\n  CancelToken? cancelToken,\\n  Options? options,\\n  ProgressCallback? onSendProgress,\\n  ProgressCallback? onReceiveProgress,\\n});\\n```\\n\\n```dart\\nfinal response = await dio.request(\\n  '/test',\\n  data: {'id': 12, 'name': 'dio'},\\n  options: Options(method: 'GET'),\\n);\\n```\\n\\n### Request Options\\n\\nThere are two request options concepts in the Dio library:\\n`BaseOptions` and `Options`.\\nThe `BaseOptions` include a set of base settings for each `Dio()`,\\nand the `Options` describes the configuration for a single request.\\nThese options will be merged when making requests.\\nThe `Options` declaration is as follows:\\n\\n```dart\\n/// The HTTP request method.\\nString method;\\n\\n/// Timeout when sending data.\\n///\\n/// Throws the [DioException] with\\n/// [DioExceptionType.sendTimeout] type when timed out.\\n///\\n/// `null` or `Duration.zero` means no timeout limit.\\nDuration? sendTimeout;\\n\\n/// Timeout when receiving data.\\n///\\n/// The timeout represents:\\n///  - a timeout before the connection is established\\n///    and the first received response bytes.\\n///  - the duration during data transfer of each byte event,\\n///    rather than the total duration of the receiving.\\n///\\n/// Throws the [DioException] with\\n/// [DioExceptionType.receiveTimeout] type when timed out.\\n///\\n/// `null` or `Duration.zero` means no timeout limit.\\nDuration? receiveTimeout;\\n\\n/// Custom field that you can retrieve it later in [Interceptor],\\n/// [Transformer] and the [Response.requestOptions] object.\\nMap<String, dynamic>? extra;\\n\\n/// HTTP request headers.\\n///\\n/// The keys of the header are case-insensitive,\\n/// e.g.: `content-type` and `Content-Type` will be treated as the same key.\\nMap<String, dynamic>? headers;\\n\\n/// Whether the case of header keys should be preserved.\\n///\\n/// Defaults to false.\\n///\\n/// This option WILL NOT take effect on these circumstances:\\n/// - XHR ([HttpRequest]) does not support handling this explicitly.\\n/// - The HTTP/2 standard only supports lowercase header keys.\\nbool? preserveHeaderCase;\\n\\n/// The type of data that [Dio] handles with options.\\n///\\n/// The default value is [ResponseType.json].\\n/// [Dio] will parse response string to JSON object automatically\\n/// when the content-type of response is [Headers.jsonContentType].\\n///\\n/// See also:\\n///  - `plain` if you want to receive the data as `String`.\\n///  - `bytes` if you want to receive the data as the complete bytes.\\n///  - `stream` if you want to receive the data as streamed binary bytes.\\nResponseType? responseType;\\n\\n/// The request content-type.\\n///\\n/// The default `content-type` for requests will be implied by the\\n/// [ImplyContentTypeInterceptor] according to the type of the request payload.\\n/// The interceptor can be removed by\\n/// [Interceptors.removeImplyContentTypeInterceptor].\\nString? contentType;\\n\\n/// Defines whether the request is considered to be successful\\n/// with the given status code.\\n/// The request will be treated as succeed if the callback returns true.\\nValidateStatus? validateStatus;\\n\\n/// Whether to retrieve the data if status code indicates a failed request.\\n///\\n/// Defaults to true.\\nbool? receiveDataWhenStatusError;\\n\\n/// See [HttpClientRequest.followRedirects].\\n///\\n/// Defaults to true.\\nbool? followRedirects;\\n\\n/// The maximum number of redirects when [followRedirects] is `true`.\\n/// [RedirectException] will be thrown if redirects exceeded the limit.\\n///\\n/// Defaults to 5.\\nint? maxRedirects;\\n\\n/// See [HttpClientRequest.persistentConnection].\\n///\\n/// Defaults to true.\\nbool? persistentConnection;\\n\\n/// The default request encoder is [Utf8Encoder], you can set custom\\n/// encoder by this option.\\nRequestEncoder? requestEncoder;\\n\\n/// The default response decoder is [Utf8Decoder], you can set custom\\n/// decoder by this option, it will be used in [Transformer].\\nResponseDecoder? responseDecoder;\\n\\n/// Indicates the format of collection data in request query parameters and\\n/// `x-www-url-encoded` body data.\\n///\\n/// Defaults to [ListFormat.multi].\\nListFormat? listFormat;\\n```\\n\\nThere is a complete example [here](../example/lib/options.dart).\\n\\n### Response\\n\\nThe response for a request contains the following information.\\n\\n```dart\\n/// Response body. may have been transformed, please refer to [ResponseType].\\nT? data;\\n\\n/// The corresponding request info.\\nRequestOptions requestOptions;\\n\\n/// HTTP status code.\\nint? statusCode;\\n\\n/// Returns the reason phrase associated with the status code.\\n/// The reason phrase must be set before the body is written\\n/// to. Setting the reason phrase after writing to the body.\\nString? statusMessage;\\n\\n/// Whether this response is a redirect.\\n/// ** Attention **: Whether this field is available depends on whether the\\n/// implementation of the adapter supports it or not.\\nbool isRedirect;\\n\\n/// The series of redirects this connection has been through. The list will be\\n/// empty if no redirects were followed. [redirects] will be updated both\\n/// in the case of an automatic and a manual redirect.\\n///\\n/// ** Attention **: Whether this field is available depends on whether the\\n/// implementation of the adapter supports it or not.\\nList<RedirectRecord> redirects;\\n\\n/// Custom fields that only for the [Response].\\nMap<String, dynamic> extra;\\n\\n/// Response headers.\\nHeaders headers;\\n```\\n\\nWhen request is succeed, you will receive the response as follows:\\n\\n```dart\\nfinal response = await dio.get('https://pub.dev');\\nprint(response.data);\\nprint(response.headers);\\nprint(response.requestOptions);\\nprint(response.statusCode);\\n```\\n\\nBe aware, the `Response.extra` is different from `RequestOptions.extra`,\\nthey are not related to each other.\\n\\n### Interceptors\\n\\nFor each dio instance, we can add one or more interceptors,\\nby which we can intercept requests, responses, and errors\\nbefore they are handled by `then` or `catchError`.\\n\\n```dart\\ndio.interceptors.add(\\n  InterceptorsWrapper(\\n    onRequest: (RequestOptions options, RequestInterceptorHandler handler) {\\n      // Do something before request is sent.\\n      // If you want to resolve the request with custom data,\\n      // you can resolve a `Response` using `handler.resolve(response)`.\\n      // If you want to reject the request with a error message,\\n      // you can reject with a `DioException` using `handler.reject(dioError)`.\\n      return handler.next(options);\\n    },\\n    onResponse: (Response response, ResponseInterceptorHandler handler) {\\n      // Do something with response data.\\n      // If you want to reject the request with a error message,\\n      // you can reject a `DioException` object using `handler.reject(dioError)`.\\n      return handler.next(response);\\n    },\\n    onError: (DioException error, ErrorInterceptorHandler handler) {\\n      // Do something with response error.\\n      // If you want to resolve the request with some custom data,\\n      // you can resolve a `Response` object using `handler.resolve(response)`.\\n      return handler.next(error);\\n    },\\n  ),\\n);\\n```\\n\\nSimple interceptor example:\\n\\n```dart\\nimport 'package:dio/dio.dart';\\nclass CustomInterceptors extends Interceptor {\\n  @override\\n  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {\\n    print('REQUEST[${options.method}] => PATH: ${options.path}');\\n    super.onRequest(options, handler);\\n  }\\n\\n  @override\\n  void onResponse(Response response, ResponseInterceptorHandler handler) {\\n    print('RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');\\n    super.onResponse(response, handler);\\n  }\\n\\n  @override\\n  Future onError(DioException err, ErrorInterceptorHandler handler) async {\\n    print('ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');\\n    super.onError(err, handler);\\n  }\\n}\\n```\\n\\n#### Resolve and reject the request\\n\\nIn all interceptors, you can interfere with their execution flow.\\nIf you want to resolve the request/response with some custom data,\\nyou can call `handler.resolve(Response)`.\\nIf you want to reject the request/response with a error message,\\nyou can call `handler.reject(dioError)` .\\n\\n```dart\\ndio.interceptors.add(\\n  InterceptorsWrapper(\\n    onRequest: (options, handler) {\\n      return handler.resolve(\\n        Response(requestOptions: options, data: 'fake data'),\\n      );\\n    },\\n  ),\\n);\\nfinal response = await dio.get('/test');\\nprint(response.data); // 'fake data'\\n```\\n\\n#### QueuedInterceptor\\n\\n`Interceptor` can be executed concurrently, that is,\\nall the requests enter the interceptor at once, rather than executing sequentially.\\nHowever, in some cases we expect that requests enter the interceptor sequentially like #590.\\nTherefore, we need to provide a mechanism for sequential access (step by step)\\nto interceptors and `QueuedInterceptor` can solve this problem.\\n\\n##### Example\\n\\nBecause of security reasons, we need all the requests to set up\\na `csrfToken` in the header, if `csrfToken` does not exist,\\nwe need to request a csrfToken first, and then perform the network request,\\nbecause the request csrfToken progress is asynchronous,\\nso we need to execute this async request in request interceptor.\\n\\nFor the complete code see [here](../example/lib/queued_interceptor_crsftoken.dart).\\n\\n#### LogInterceptor\\n\\nYou can apply the `LogInterceptor` to log requests and responses automatically.\\n\\n**Note:** `LogInterceptor` should always be the last interceptor added,\\notherwise modifications by following interceptors will not be logged.\\n\\n#### Dart\\n\\n```dart\\ndio.interceptors.add(LogInterceptor(responseBody: false)); // Do not output responses body.\\n```\\n\\n**Note:** When using the default `logPrint` function, logs will only be printed\\nin DEBUG mode (when the assertion is enabled).\\n\\nAlternatively `dart:developer`'s log can also be used to log messages (available in Flutter too).\\n\\n#### Flutter\\n\\nWhen using Flutter, Flutters own `debugPrint` function should be used.\\n\\nThis ensures, that debug messages are also available via `flutter logs`.\\n\\n**Note:** `debugPrint` **does not mean print logs under the DEBUG mode**,\\nit's a throttled function which helps to print full logs without truncation.\\nDo not use it under any production environment unless you're intended to.\\n\\n```dart\\ndio.interceptors.add(\\n  LogInterceptor(\\n    logPrint: (o) => debugPrint(o.toString()),\\n  ),\\n);\\n```\\n\\n#### Custom Interceptor\\n\\nYou can customize interceptor by extending the `Interceptor/QueuedInterceptor` class.\\nThere is an example that implementing a simple cache policy:\\n[custom cache interceptor](../example/lib/custom_cache_interceptor.dart).\\n\\n## Handling Errors\\n\\nWhen an error occurs, Dio will wrap the `Error/Exception` to a `DioException`:\\n\\n```dart\\ntry {\\n  // 404\\n  await dio.get('https://api.pub.dev/not-exist');\\n} on DioException catch (e) {\\n  // The request was made and the server responded with a status code\\n  // that falls out of the range of 2xx and is also not 304.\\n  if (e.response != null) {\\n    print(e.response.data)\\n    print(e.response.headers)\\n    print(e.response.requestOptions)\\n  } else {\\n    // Something happened in setting up or sending the request that triggered an Error\\n    print(e.requestOptions)\\n    print(e.message)\\n  }\\n}\\n```\\n\\n### DioException\\n\\n```dart\\n/// The request info for the request that throws exception.\\nRequestOptions requestOptions;\\n\\n/// Response info, it may be `null` if the request can't reach to the\\n/// HTTP server, for example, occurring a DNS error, network is not available.\\nResponse? response;\\n\\n/// The type of the current [DioException].\\nDioExceptionType type;\\n\\n/// The original error/exception object;\\n/// It's usually not null when `type` is [DioExceptionType.unknown].\\nObject? error;\\n\\n/// The stacktrace of the original error/exception object;\\n/// It's usually not null when `type` is [DioExceptionType.unknown].\\nStackTrace? stackTrace;\\n\\n/// The error message that throws a [DioException].\\nString? message;\\n```\\n\\n### DioExceptionType\\n\\nSee [the source code](lib/src/dio_exception.dart).\\n\\n## Using application/x-www-form-urlencoded format\\n\\nBy default, Dio serializes request data (except `String` type) to `JSON`.\\nTo send data in the `application/x-www-form-urlencoded` format instead:\\n\\n```dart\\n// Instance level\\ndio.options.contentType = Headers.formUrlEncodedContentType;\\n// or only works once\\ndio.post(\\n  '/info',\\n  data: {'id': 5},\\n  options: Options(contentType: Headers.formUrlEncodedContentType),\\n);\\n```\\n\\n## Sending FormData\\n\\nYou can also send `FormData` with Dio, which will send data in the `multipart/form-data`,\\nand it supports uploading files.\\n\\n```dart\\nfinal formData = FormData.fromMap({\\n  'name': 'dio',\\n  'date': DateTime.now().toIso8601String(),\\n  'file': await MultipartFile.fromFile('./text.txt', filename: 'upload.txt'),\\n});\\nfinal response = await dio.post('/info', data: formData);\\n```\\n\\nYou can also specify your desired boundary name which will be used\\nto construct boundaries of every `FormData` with additional prefix and suffix.\\n\\n```dart\\nfinal formDataWithBoundaryName = FormData(\\n  boundaryName: 'my-boundary-name',\\n);\\n```\\n\\n> `FormData` is supported with the POST method typically.\\n\\nThere is a complete example [here](../example/lib/formdata.dart).\\n\\n### Multiple files upload\\n\\nThere are two ways to add multiple files to `FormData`,\\nthe only difference is that upload keys are different for array types。\\n\\n```dart\\nfinal formData = FormData.fromMap({\\n  'files': [\\n    MultipartFile.fromFileSync('path/to/upload1.txt', filename: 'upload1.txt'),\\n    MultipartFile.fromFileSync('path/to/upload2.txt', filename: 'upload2.txt'),\\n  ],\\n});\\n```\\n\\nThe upload key eventually becomes `files[]`.\\nThis is because many back-end services add a middle bracket to key\\nwhen they get an array of files.\\n**If you don't want a list literal**,\\nyou should create FormData as follows (Don't use `FormData.fromMap`):\\n\\n```dart\\nfinal formData = FormData();\\nformData.files.addAll([\\n  MapEntry(\\n   'files',\\n    MultipartFile.fromFileSync('./example/upload.txt',filename: 'upload.txt'),\\n  ),\\n  MapEntry(\\n    'files',\\n    MultipartFile.fromFileSync('./example/upload.txt',filename: 'upload.txt'),\\n  ),\\n]);\\n```\\n\\n### Reuse `FormData`s and `MultipartFile`s\\n\\nYou should make a new `FormData` or `MultipartFile` every time in repeated requests.\\nA typical wrong behavior is setting the `FormData` as a variable and using it in every request.\\nIt can be easy for the *Cannot finalize* exceptions to occur.\\nTo avoid that, write your requests like the below code:\\n```dart\\nFuture<void> _repeatedlyRequest() async {\\n  Future<FormData> createFormData() async {\\n    return FormData.fromMap({\\n      'name': 'dio',\\n      'date': DateTime.now().toIso8601String(),\\n      'file': await MultipartFile.fromFile('./text.txt',filename: 'upload.txt'),\\n    });\\n  }\\n  \\n  await dio.post('some-url', data: await createFormData());\\n}\\n```\\n\\n## Transformer\\n\\n`Transformer` allows changes to the request/response data\\nbefore it is sent/received to/from the server.\\nDio has already implemented a `BackgroundTransformer` as default, \\nwhich calls `jsonDecode` in an isolate if the response is larger than 50 KB.\\nIf you want to customize the transformation of request/response data,\\nyou can provide a `Transformer` by your self,\\nand replace the `BackgroundTransformer` by setting the `dio.transformer`.\\n\\n> `Transformer.transformRequest` only takes effect when request with `PUT`/`POST`/`PATCH`,\\n> they're methods that can contain the request body.\\n> `Transformer.transformResponse` however, can be applied to all types of responses.\\n\\n### Transformer example\\n\\nThere is an example for [customizing Transformer](../example/lib/transformer.dart).\\n\\n## HttpClientAdapter\\n\\n`HttpClientAdapter` is a bridge between `Dio` and `HttpClient`.\\n\\n`Dio` implements standard and friendly APIs for developer.\\n`HttpClient` is the real object that makes Http requests.\\n\\nWe can use any `HttpClient` not just `dart:io:HttpClient` to make HTTP requests.\\nAnd all we need is providing a `HttpClientAdapter`.\\nThe default `HttpClientAdapter` for Dio is `IOHttpClientAdapter` on native platforms,\\nand `BrowserHttpClientAdapter` on the Web platform.\\nThey can be initiated by calling the `HttpClientAdapter()`.\\n\\n```dart\\ndio.httpClientAdapter = HttpClientAdapter();\\n```\\n\\nIf you want to use platform adapters explicitly:\\n- For the Web platform:\\n  ```dart\\n  import 'package:dio/browser.dart';\\n  // ...\\n  dio.httpClientAdapter = BrowserHttpClientAdapter();\\n  ```\\n- For native platforms:\\n  ```dart\\n  import 'package:dio/io.dart';\\n  // ...\\n  dio.httpClientAdapter = IOHttpClientAdapter();\\n  ```\\n\\n[Here](../example/lib/adapter.dart) is a simple example to custom adapter. \\n\\n### Using proxy\\n\\n`IOHttpClientAdapter` provide a callback to set proxy to `dart:io:HttpClient`,\\nfor example:\\n\\n```dart\\nimport 'package:dio/io.dart';\\n\\nvoid initAdapter() {\\n  dio.httpClientAdapter = IOHttpClientAdapter(\\n    createHttpClient: () {\\n      final client = HttpClient();\\n      // Config the client.\\n      client.findProxy = (uri) {\\n        // Forward all request to proxy \\\"localhost:8888\\\".\\n        // Be aware, the proxy should went through you running device,\\n        // not the host platform.\\n        return 'PROXY localhost:8888';\\n      };\\n      // You can also create a new HttpClient for Dio instead of returning,\\n      // but a client must being returned here.\\n      return client;\\n    },\\n  );\\n}\\n```\\n\\nThere is a complete example [here](../example/lib/proxy.dart).\\n\\nWeb does not support to set proxy.\\n\\n### HTTPS certificate verification\\n\\nHTTPS certificate verification (or public key pinning) refers to the process of ensuring that\\nthe certificates protecting the TLS connection to the server are the ones you expect them to be.\\nThe intention is to reduce the chance of a man-in-the-middle attack.\\nThe theory is covered by [OWASP](https://owasp.org/www-community/controls/Certificate_and_Public_Key_Pinning).\\n\\n_Server Response Certificate_\\n\\nUnlike other methods, this one works with the certificate of the server itself.\\n\\n```dart\\nvoid initAdapter() {\\n  const String fingerprint = 'ee5ce1dfa7a53657c545c62b65802e4272878dabd65c0aadcf85783ebb0b4d5c';\\n  dio.httpClientAdapter = IOHttpClientAdapter(\\n    createHttpClient: () {\\n      // Don't trust any certificate just because their root cert is trusted.\\n      final HttpClient client = HttpClient(context: SecurityContext(withTrustedRoots: false));\\n      // You can test the intermediate / root cert here. We just ignore it.\\n      client.badCertificateCallback = (cert, host, port) => true;\\n      return client;\\n    },\\n    validateCertificate: (cert, host, port) {\\n      // Check that the cert fingerprint matches the one we expect.\\n      // We definitely require _some_ certificate.\\n      if (cert == null) {\\n        return false;\\n      }\\n      // Validate it any way you want. Here we only check that\\n      // the fingerprint matches the OpenSSL SHA256.\\n      return fingerprint == sha256.convert(cert.der).toString();\\n    },\\n  );\\n}\\n```\\n\\nYou can use openssl to read the SHA256 value of a certificate:\\n\\n```sh\\nopenssl s_client -servername pinning-test.badssl.com -connect pinning-test.badssl.com:443 < /dev/null 2>/dev/null \\\\\\n  | openssl x509 -noout -fingerprint -sha256\\n\\n# SHA256 Fingerprint=EE:5C:E1:DF:A7:A5:36:57:C5:45:C6:2B:65:80:2E:42:72:87:8D:AB:D6:5C:0A:AD:CF:85:78:3E:BB:0B:4D:5C\\n# (remove the formatting, keep only lower case hex characters to match the `sha256` above)\\n```\\n\\n_Certificate Authority Verification_\\n\\nThese methods work well when your server has a self-signed certificate,\\nbut they don't work for certificates issued by a 3rd party like AWS or Let's Encrypt.\\n\\nThere are two ways to verify the root of the https certificate chain provided by the server.\\nSuppose the certificate format is PEM, the code like:\\n\\n```dart\\nvoid initAdapter() {\\n  String PEM = 'XXXXX'; // root certificate content\\n  dio.httpClientAdapter = IOHttpClientAdapter(\\n    createHttpClient: () {\\n      final client = HttpClient();\\n      client.badCertificateCallback = (X509Certificate cert, String host, int port) {\\n        return cert.pem == PEM; // Verify the certificate.\\n      };\\n      return client;\\n    },\\n  );\\n}\\n```\\n\\nAnother way is creating a `SecurityContext` when create the `HttpClient`:\\n\\n```dart\\nvoid initAdapter() {\\n  String PEM = 'XXXXX'; // root certificate content\\n  dio.httpClientAdapter = IOHttpClientAdapter(\\n    onHttpClientCreate: (_) {\\n      final SecurityContext sc = SecurityContext();\\n      sc.setTrustedCertificates(File(pathToTheCertificate));\\n      final HttpClient client = HttpClient(context: sc);\\n      return client;\\n    },\\n  );\\n}\\n```\\n\\nIn this way, the format of `setTrustedCertificates()` must be PEM or PKCS12.\\nPKCS12 requires password to use, which will expose the password in the code,\\nso it's not recommended to use in common cases.\\n\\n## HTTP/2 support\\n\\n[dio_http2_adapter](../plugins/http2_adapter) is a Dio `HttpClientAdapter`\\nwhich supports HTTP/2.\\n\\n## Cancellation\\n\\nYou can cancel a request using a `CancelToken`.\\nOne token can be shared with multiple requests.\\nWhen a token's `cancel()` is invoked, all requests with this token will be cancelled.\\n\\n```dart\\nfinal cancelToken = CancelToken();\\ndio.get(url, cancelToken: cancelToken).catchError((DioException error) {\\n  if (CancelToken.isCancel(error)) {\\n    print('Request canceled: ${error.message}');\\n  } else {\\n    // handle error.\\n  }\\n});\\n// Cancel the requests with \\\"cancelled\\\" message.\\ntoken.cancel('cancelled');\\n```\\n\\nThere is a complete example [here](../example/lib/cancel_request.dart).\\n\\n## Extends Dio class\\n\\n`Dio` is an abstract class with factory constructor,\\nso we don't extend `Dio` class direct.\\nWe can extend `DioForNative` or `DioForBrowser` instead, for example:\\n\\n```dart\\nimport 'package:dio/dio.dart';\\nimport 'package:dio/io.dart';\\n// If in browser, import 'package:dio/browser.dart'.\\n\\nclass Http extends DioForNative {\\n  Http([BaseOptions options]) : super(options) {\\n    // do something\\n  }\\n}\\n```\\n\\nWe can also implement a custom `Dio` client:\\n\\n```dart\\nclass MyDio with DioMixin implements Dio {\\n  // ...\\n}\\n```\\n\\n## Cross-Origin Resource Sharing on Web (CORS)\\n\\nIf a request is not a [simple request][],\\nthe Web browser will send a [CORS preflight request][]\\nthat checks to see if the CORS protocol is understood\\nand a server is aware using specific methods and headers.\\n\\nYou can modify your requests to match the definition of simple request,\\nor add a CORS middleware for your service to handle CORS requests.\\n\\n[simple request]: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#simple_requests\\n[CORS preflight request]: https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request\\n\",\n            \"changelog\": \"# CHANGELOG\\n\\n**Before you upgrade: Breaking changes might happen in major and minor versions of packages.<br/>\\nSee the [Migration Guide][] for the complete breaking changes list.**\\n\\n## Unreleased\\n\\n*None.*\\n\\n## 5.7.0\\n\\n- Graceful handling of responses with nonzero `Content-Length`, `Content-Type` json, but empty body\\n  - Empty responses are now transformed to `null`\\n\\n\\n## 5.6.0\\n\\n- Supports the WASM environment. Users should upgrade the adapter with\\n  `dart pub upgrade` or `flutter pub upgrade` to use the WASM-supported version.\\n\\n## 5.5.0+1\\n\\n- Fix WASM compile errors after moving the web implementation to `dio_web_adapter`.\\n\\n## 5.5.0\\n\\n- Raise the min Dart SDK version to 2.18.0.\\n- Add constructor for `DioExceptionType.badCertificate`.\\n- Create type alias `DioMediaType` for `http_parser`'s `MediaType`.\\n- Fix the type conversion regression when using `MultipartFile.fromBytes`.\\n- Split the Web implementation to `package:dio_web_adapter`.\\n- Add FusedTransformer for improved performance when decoding JSON.\\n- Set FusedTransformer as the default transformer.\\n- Improves `InterceptorState.toString()`.\\n- If the `CancelToken` got canceled before making requests,\\n  throws the exception directly rather than cut actual HTTP requests afterward.\\n- Catch `MediaType` parse exception in `Transformer.isJsonMimeType`.\\n- Improves warning logs on the Web platform.\\n- Improves memory allocating when using `CancelToken`.\\n\\n## 5.4.3+1\\n\\n- Fix type promotions for the UTF-8 encoder on previous Dart SDKs.\\n\\n## 5.4.3\\n\\n- Remove sockets detach in `IOHttpClientAdapter`.\\n- Allows to define `FormData.boundaryName` instead of the default `--dio-boundary-`.\\n\\n## 5.4.2+1\\n\\n- Revert \\\"Catch sync/async exceptions in interceptors' handlers\\\".\\n\\n## 5.4.2\\n\\n- Fix `receiveTimeout` throws exception after the request has been cancelled.\\n- Catch sync/async exceptions in interceptors' handlers.\\n- Throws precise `StateError` for handler's duplicated calls.\\n\\n## 5.4.1\\n\\n- Provide fix suggestions for `dart fix`.\\n- Fix `receiveTimeout` for streamed responses.\\n- Fix cancellation for streamed responses and downloads when using `IOHttpClientAdapter`.\\n- Fix receive progress for streamed responses and downloads when using `IOHttpClientAdapter`.\\n- Support relative `baseUrl` on the Web platform.\\n- Avoid fake uncaught exceptions during debugging with IDEs.\\n\\n## 5.4.0\\n\\n- Improve `SyncTransformer`'s stream transform.\\n- Allow case-sensitive header keys with the `preserveHeaderCase` flag through options.\\n- Fix `receiveTimeout` for the `IOHttpClientAdapter`.\\n- Fix `receiveTimeout` for the `download` method of `DioForNative`.\\n- Improve the stream byte conversion.\\n\\n## 5.3.4\\n\\n- Raise warning for `Map`s other than `Map<String, dynamic>` when encoding request data.\\n- Improve exception messages.\\n- Allow `ResponseDecoder` and `RequestEncoder` to be async.\\n- Ignores `Duration.zero` timeouts.\\n\\n## 5.3.3\\n\\n- Fix failing requests throw `DioException`s with `.unknown` instead of `.connectionError` on `SocketException`.\\n- Removes the accidentally added `options` argument for `Options.compose`.\\n- Fix wrong formatting of multi-value header in `BrowserHttpClientAdapter`.\\n- Add warning in debug mode when trying to send data with a `GET` request in web.\\n- Reduce cases in which browsers would trigger a CORS preflight request.\\n- Add warnings in debug mode when using `sendTimeout` and `onSendProgress` with an empty request body.\\n- Fix `receiveTimeout` not working correctly on web.\\n- Fix `ImplyContentTypeInterceptor` can be removed by `Interceptors.clear()` by default.\\n\\n## 5.3.2\\n\\n- Revert removed `download` for `DioMixin`.\\n- Fix for `Dio.download` not cleaning the file on data handling error.\\n\\n## 5.3.1\\n\\n- Improve package descriptions and code formats.\\n- Improve comments.\\n- Fix error when cloning `MultipartFile` from `FormData` with regression test.\\n- Deprecate `MultipartFile` constructor in favor `MultipartFile.fromStream`.\\n- Add `FormData.clone`.\\n\\n## 5.3.0\\n\\n- Remove `http` from `dev_dependencies`.\\n- Add support for cloning `MultipartFile` from `FormData`.\\n- Only produce null response body when `ResponseType.json`.\\n\\n## 5.2.1+1\\n\\n- Fix changelog on pub.dev.\\n\\n## 5.2.1\\n\\n- Revert changes to handling of `List<int>` body data.\\n\\n## 5.2.0+1\\n\\n- Fix `DioErrorType` deprecation hint.\\n\\n## 5.2.0\\n\\n- Make `LogInterceptor` prints in DEBUG mode (when the assertion is enabled) by default.\\n- Deprecate `DioError` in favor of `DioException`.\\n- Fix `IOHttpClientAdapter.onHttpClientCreate` Repeated calls\\n- `IOHttpClientAdapter.onHttpClientCreate` has been deprecated and is scheduled for removal in\\n  Dio 6.0.0 - Please use the replacement `IOHttpClientAdapter.createHttpClient` instead.\\n- Using `CancelToken` no longer closes and re-creates `HttpClient` for each request when `IOHttpClientAdapter` is used.\\n- Fix timeout handling for browser `receiveTimeout`.\\n- Improve performance when sending binary data (`List<int>`/`Uint8List`).\\n\\n## 5.1.2\\n\\n- Allow `FormData` to send a null entry value as an empty string.\\n\\n## 5.1.1\\n\\n- Revert changes to `CancelToken.cancel()` behavior, as a result the `DioError`\\n  provided by the `CancelToken.cancelError` does not contain useful information\\n  when the token was not used with a request.\\n- Fix wrong `ListFormat` being used for comparison during encoding of `FormData`\\n  and `application/x-www-form-urlencoded`, resulting in potential wrong output encoding\\n  for `ListFormat.multi` and `ListFormat.multiCompatible` since Dio 4.0.x.\\n- Respect `Options.listFormat` when encoding `x-www-url-encoded` content.\\n\\n## 5.1.0\\n\\n- Fix double-completion when using `connectionTimeout` on web platform.\\n- Allow defining adapter methods through their constructors.\\n- Fix `FormData` encoding regression for maps with dynamic keys, introduced in 5.0.3.\\n- Mark several static `DioMixin` functions as `@internal`.\\n- Make `DioError.stackTrace` non-nullable.\\n- Ensure `DioError.stackTrace` always points to the correct call site.\\n\\n## 5.0.3\\n\\n- Imply `List<Map>` as JSON content in `ImplyContentTypeInterceptor`.\\n- Fix `FormData` encoding for collections and objects.\\n\\n## 5.0.2\\n\\n- Improve code formats according to linter rules.\\n- Remove the force conversion for the response body.\\n- Fix `DioErrorType.cancel` in `Interceptors`.\\n- Fix wrong encoding of collection query parameters.\\n- Fix \\\"unsupported operation\\\" error on web platform.\\n\\n## 5.0.1\\n\\n- Add `ImplyContentTypeInterceptor` as a default interceptor.\\n- Add `Headers.multipartFormDataContentType` for headers usage.\\n- Fix variable shadowing of `withCredentials` in `browser_adapter.dart`.\\n\\n## 5.0.0\\n\\n- Raise the min Dart SDK version to 2.15.0 to support `BackgroundTransformer`.\\n- Change `Dio.transformer` from `DefaultTransformer` to `BackgroundTransformer`.\\n- Remove plain ASCII check in `FormData`.\\n- Allow asynchronous method with `savePath`.\\n- Allow `data` in all request methods.\\n- A platform independent `HttpClientAdapter` can now be instantiated by doing\\n  `dio.httpClientAdapter = HttpClientAdapter();`.\\n- Add `ValidateCertificate` to handle certificate pinning better.\\n- Support `Content-Disposition` header case sensitivity.\\n\\n### Breaking Changes\\n\\n- The default charset `utf-8` in `Headers` content type constants has been removed.\\n- `BaseOptions.setRequestContentTypeWhenNoPayload` has been removed.\\n- Improve `DioError`s. There are now more cases in which the inner original stacktrace is supplied.\\n- `HttpClientAdapter` must now be implemented instead of extended.\\n- Any classes specific to `dart:io` platforms can now be imported via `import 'package:dio/io.dart';`.\\n  Classes specific to web can be imported via `import 'package:dio/browser.dart';`.\\n- `connectTimeout`, `sendTimeout`, and `receiveTimeout` are now `Duration`s.\\n\\n## 4.0.6\\n\\n- fix #1452\\n\\n## 4.0.5\\n\\n- require Dart `2.12.1` which fixes exception handling for secure socket connections (#45214)\\n- Only delete file if it exists when downloading.\\n- Fix `BrowserHttpClientAdapter` canceled hangs\\n- Correct JSON MIME Type detection\\n- [Web] support send/receive progress in web platform\\n- refactor timeout logic\\n- use 'arraybuffer' instead of 'blob' for xhr requests in web platform\\n\\n## 4.0.4\\n\\n- Fix fetching null data in a response\\n\\n## 4.0.3\\n\\n- fix #1311\\n\\n## 4.0.2\\n\\n- Add QueuedInterceptor\\n- merge #1316 #1317\\n\\n## 4.0.1\\n\\n- merge pr #1177 #1196 #1205 #1224 #1225 #1227 #1256 #1263 #1291\\n- fix #1257\\n\\n## 4.0.0\\n\\nstable version\\n\\n## 4.0.0-prev3\\n\\n- fix #1091 , #1089 , #1087\\n\\n## 4.0.0-prev2\\n\\n- fix #1082 and # 1076\\n\\n## 4.0.0-prev1\\n\\n**Interceptors:** Add `handler` for Interceptor APIs which can specify\\nthe subsequent interceptors processing logic more finely (whether to skip them or not).\\n\\n## 4.0.0-beta7\\n\\n- fix #1074\\n\\n## 4.0.0-beta6\\n\\n- fix #1070\\n\\n## 4.0.0-beta5\\n\\n- support ListParam\\n\\n## 4.0.0-beta4\\n\\n- fix #1060\\n\\n## 4.0.0-beta3\\n\\n- rename CollectionFormat to ListFormat\\n- change default value of Options.listFormat from `multiCompatible` to `multi`\\n- add upload_stream_test.dart\\n\\n## 4.0.0-beta2\\n\\n- support null-safety\\n- add `CollectionFormat` configuration in Options\\n- add `fetch` API for Dio\\n- rename DioErrorType enums from uppercase to camel style\\n- rename 'Options.merge' to 'Options.copyWith'\\n\\n## 3.0.10 2020.8.7\\n\\n1. fix #877 'dio.interceptors.errorLock.lock()'\\n2. fix #851\\n3. fix #641\\n\\n## 3.0.9 2020.2.24\\n\\n- Add test cases\\n\\n## 3.0.8 2019.12.29\\n\\n- Code style improvement\\n\\n## 3.0.7 2019.11.25\\n\\n- Merge #574 : fix upload image header error, support both oss and other server\\n\\n## 3.0.6 2019.11.22\\n\\n- revert #562, and fixed #566\\n\\n## 3.0.5 2019.11.19\\n\\n- merge #557 #531\\n\\n## 3.0.4 2019.10.29\\n\\n- fix #502 #515 #523\\n\\n## 3.0.3 2019.10.1\\n\\n- fix encode bug\\n\\n## 3.0.2 2019.9.26\\n\\n- fix #474 #480\\n\\n## 3.0.2-dev.1 2019.9.20\\n\\n- fix #470 #471\\n\\n## 3.0.1 2019.9.20\\n\\n- Fix #467\\n- Export `DioForNative` and `DioForBrowser` classes.\\n\\n## 3.0.0\\n\\n### New features\\n\\n- Support Flutter Web.\\n- Extract [CookieManager](../plugins/cookie_manager) into a separate package（No need for Flutter Web）.\\n- Provides [HTTP/2.0 HttpClientAdapter](../plugins/http2_adapter).\\n\\n### Change List\\n\\n- ~~Options.cookies~~\\n\\n- ~~Options.connectionTimeout~~ ；We should config connection timed out in `BaseOptions`. For keep-alive reasons, not every request requires a separate connection。\\n\\n- `Options.followRedirects`、`Options.maxRedirects`、`Response.redirects` don't make sense in Flutter Web，because redirection can be automatically handled by browsers.\\n- ~~FormData.from~~，use `FormData.fromMap` instead.\\n- Delete ~~Formdata.asBytes()~~、~~Formdata.asBytesAsync()~~ , use `Formdata.readAsBytes()` instead.\\n- Delete ~~`UploadFileInfo`~~ class， `MultipartFile` instead.\\n- The return type of Interceptor's callback changes from `FutureOr<dynamic>` to `Future`.\\n  The reason is [here](https://dart.dev/guides/language/effective-dart/design#avoid-using-futureort-as-a-return-type).\\n- The type of `Response.headers` changes from `HttpHeaders` to `Headers`,\\n  because `HttpHeaders` is in \\\"dart:io\\\" library which is not supported in Flutter Web.\\n\\n## 2.1.16\\n\\nAdd `deleteOnError` parameter to `downloadUri`\\n\\n## 2.1.14\\n\\n- fix #402 #385 #422\\n\\n## 2.1.13\\n\\n- fix #369\\n\\n## 2.1.12\\n\\n- fix #367 #365\\n\\n## 2.1.10\\n\\n- fix #360\\n\\n## 2.1.9\\n\\n- support flutter version>=1.8 (fix #357)\\n\\n## 2.1.8\\n\\n- fix #354 #312\\n- Allow \\\"delete\\\" method with request body(#223)\\n\\n## 2.1.7\\n\\n- fix #321 #318\\n\\n## 2.1.6\\n\\n- fix #316\\n\\n## 2.1.5\\n\\n- fix #309\\n\\n## 2.1.4\\n\\n- Add `options.responseDecoder`\\n- Make DioError catchable by implementing Exception instead of Error\\n\\n## 2.1.3\\n\\nAdd `statusMessage` attribute for `Response` and `ResponseBody`\\n\\n## 2.1.2\\n\\nFirst Stable version for 2.x\\n\\n## 2.0\\n\\n**Refactor the Interceptors**\\n\\n- Support add Multiple Interceptors.\\n- Add Log Interceptor\\n- Add CookieManager Interceptor\\n\\n**API**\\n\\n- Support Uri\\n- Support `queryParameters` for all request API\\n- Modify the `get` API\\n\\n**Options**\\n\\n- Separate Options to three class: Options、BaseOptions、RequestOptions\\n- Add `queryParameters` and `cookies` for BaseOptions\\n\\n**Adapter**\\n\\n- Abstract HttpClientAdapter layer.\\n- Provide a DefaultHttpClientAdapter which make http requests by `dart:io:HttpClient`\\n\\n## 0.1.8\\n\\n- change file name \\\"TransFormer\\\" to \\\"Transformer\\\"\\n- change \\\"dio.transFormer\\\" to \\\"dio.transformer\\\"\\n- change deprecated \\\"UTF8\\\" to \\\"utf8\\\"\\n\\n## 0.1.5\\n\\n- add `clear` method for dio instance\\n\\n## 0.1.4\\n\\n- fix `download` bugs\\n\\n## 0.1.3\\n\\n- support upload files with Array\\n- support create `HttpClient` by user self in `onHttpClientCreate`\\n- support generic\\n- bug fix\\n\\n## 0.0.1\\n\\n- Initial version, created by Stagehand\\n\\n[Migration Guide]: doc/migration_guide.md\\n\",\n            \"created_at\": \"2024-10-29T00:08:41.465804+07:00\",\n            \"updated_at\": \"2024-10-29T00:08:41.465804+07:00\"\n        }\n    }\n}"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{ACCESS_TOKEN}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [""]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [""]
+          }
+        }
+      ]
+    }
+  ]
+}

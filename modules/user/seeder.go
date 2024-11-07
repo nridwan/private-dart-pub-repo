@@ -26,5 +26,6 @@ func (module *UserModule) RunSeeder() {
 		Email:    "admin@m8zn.work",
 		Password: defaultPassword,
 		IsAdmin:  true,
+		CanWrite: true,
 	})
 }

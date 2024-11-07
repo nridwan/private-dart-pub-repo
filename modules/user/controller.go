@@ -125,7 +125,13 @@ func (controller *userController) handleRefresh(ctx *fiber.Ctx) error {
 	var user *jwt.JWTTokenModel
 	var err error
 
-	user, err = controller.service.RefreshToken(ctx.UserContext(), utils.GetFiberJwtClaims(ctx))
+	id, err := utils.GetFiberJwtUserId(ctx)
+
+	if err != nil {
+		return fiber.NewError(400, err.Error())
+	}
+
+	user, err = controller.service.RefreshToken(ctx.UserContext(), utils.GetFiberJwtClaims(ctx), id)
 
 	if err != nil {
 		return fiber.NewError(400, err.Error())

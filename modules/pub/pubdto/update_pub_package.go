@@ -1,5 +1,5 @@
 package pubdto
 
 type UpdatePubPackageDTO struct {
-	Private bool `json:"private" validate:"required,boolean"`
+	Private *bool `json:"private" validate:"boolean"`
 }

@@ -6,6 +6,7 @@ import (
 	"private-pub-repo/modules/db"
 	"private-pub-repo/modules/jwt"
 	"private-pub-repo/modules/monitor"
+	"private-pub-repo/modules/pubtoken/pubtokendto"
 	"private-pub-repo/modules/pubtoken/pubtokenmodel"
 	"private-pub-repo/utils"
 	"sync"
@@ -22,9 +23,10 @@ const (
 type PubTokenService interface {
 	Init(db db.DbService)
 	Insert(context context.Context, pubtoken *pubtokenmodel.PubTokenModel) (*string, error)
-	List(context context.Context, req *appmodel.GetListRequest) (*appmodel.PaginationResponseList, error)
-	Detail(context context.Context, id uuid.UUID) (*pubtokenmodel.PubTokenModel, error)
-	Delete(context context.Context, id uuid.UUID) error
+	List(context context.Context, req *appmodel.GetListRequest, userId *uuid.UUID) (*appmodel.PaginationResponseList, error)
+	Detail(context context.Context, id uuid.UUID, userId *uuid.UUID) (*pubtokenmodel.PubTokenModel, error)
+	Update(context context.Context, id uuid.UUID, userId *uuid.UUID, updateDTO *pubtokendto.UpdateTokenDTO) (*pubtokenmodel.PubTokenModel, error)
+	Delete(context context.Context, id uuid.UUID, userId *uuid.UUID) error
 }
 
 type pubTokenServiceImpl struct {
@@ -60,12 +62,12 @@ func (service *pubTokenServiceImpl) Insert(context context.Context, pubToken *pu
 	return &response, err
 }
 
-func (service *pubTokenServiceImpl) List(context context.Context, req *appmodel.GetListRequest) (*appmodel.PaginationResponseList, error) {
+func (service *pubTokenServiceImpl) List(context context.Context, req *appmodel.GetListRequest, userId *uuid.UUID) (*appmodel.PaginationResponseList, error) {
 	spanContext, span := service.monitorService.StartTraceSpan(context, "PubTokenService.List", utils.StructToMap(req))
 	defer span.End()
 	var count int64
 	pubtokens := []pubtokenmodel.PubTokenModel{}
-	query := service.db.WithContext(spanContext).Model(pubtokens)
+	query := service.db.WithContext(spanContext).Model(pubtokens).Where("user_id = ?", userId)
 	if req.Search != "" {
 		query.Where("name ILIKE ?", "%"+req.Search+"%")
 	}
@@ -111,24 +113,54 @@ func (service *pubTokenServiceImpl) List(context context.Context, req *appmodel.
 	}, nil
 }
 
-func (service *pubTokenServiceImpl) Detail(context context.Context, id uuid.UUID) (*pubtokenmodel.PubTokenModel, error) {
+func (service *pubTokenServiceImpl) Detail(context context.Context, id uuid.UUID, userId *uuid.UUID) (*pubtokenmodel.PubTokenModel, error) {
 	spanContext, span := service.monitorService.StartTraceSpan(context, "PubTokenService.Detail", map[string]interface{}{
 		"id": id.String(),
 	})
 	defer span.End()
 	var pubToken pubtokenmodel.PubTokenModel
-	result := service.db.WithContext(spanContext).First(&pubToken, id)
+	result := service.db.WithContext(spanContext).First(&pubToken, pubtokendto.QueryTokenDTO{
+		ID:     &id,
+		UserID: userId,
+	})
 
 	return &pubToken, result.Error
 }
 
-func (service *pubTokenServiceImpl) Delete(context context.Context, id uuid.UUID) error {
+func (service *pubTokenServiceImpl) Update(context context.Context, id uuid.UUID, userId *uuid.UUID, updateDTO *pubtokendto.UpdateTokenDTO) (*pubtokenmodel.PubTokenModel, error) {
+	spanContext, span := service.monitorService.StartTraceSpan(context, "PubTokenService.Update", map[string]interface{}{
+		"id": id.String(),
+	})
+	defer span.End()
+	var pubToken pubtokenmodel.PubTokenModel
+	result := service.db.WithContext(spanContext).Model(&pubToken).Where("id = ?", id).Where("user_id = ?", userId).Updates(updateDTO)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return service.Detail(context, id, userId)
+}
+
+func (service *pubTokenServiceImpl) Delete(context context.Context, id uuid.UUID, userId *uuid.UUID) error {
 	spanContext, span := service.monitorService.StartTraceSpan(context, "PubTokenService.Delete", map[string]interface{}{
 		"id": id.String(),
 	})
 	defer span.End()
 	var pubtoken pubtokenmodel.PubTokenModel
-	result := service.db.WithContext(spanContext).Delete(&pubtoken, id)
+	result := service.db.WithContext(spanContext).Delete(&pubtoken, pubtokendto.QueryTokenDTO{
+		ID:     &id,
+		UserID: userId,
+	})
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
 	return result.Error
 }
 

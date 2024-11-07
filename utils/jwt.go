@@ -21,8 +21,8 @@ func HasJwt(c *fiber.Ctx) bool {
 	return ok
 }
 
-func IsFiberJwtUserAdmin(c *fiber.Ctx) bool {
-	raw, ok := GetFiberJwtClaims(c)["is_admin"]
+func IsFiberJwtCanWrite(c *fiber.Ctx) bool {
+	raw, ok := GetFiberJwtClaims(c)["can_write"]
 
 	if !ok {
 		return false

@@ -9,6 +9,7 @@ type UserModel struct {
 	Password *string      `json:"-" gorm:"not null;"`
 	IsAdmin  bool         `json:"is_admin" gorm:"not null;default:false"`
 	UserOtp  UserOtpModel `json:"-" gorm:"foreignKey:ID;references:ID"`
+	CanWrite bool         `json:"can_write" gorm:"not null;default:false"`
 }
 
 func (UserModel) TableName() string {
