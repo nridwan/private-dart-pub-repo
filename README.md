@@ -308,7 +308,7 @@ After successfully run the service we can use the APIs for multiple scenario.
 ### Admin - Manage User
 Generic flow:
 1. Login using [Login](#user---login) endpoint.
-2. Admin can read / create / update / delete user by using [](#admin---users-crud)
+2. Admin can read / create / update / delete user by using [Admin - User's CRUD](#admin---users-crud)
 
 Deleting user: 
 1. use [Users > Delete](#admin---users-crud) endpoint to delete user alongside with their tokens. 
