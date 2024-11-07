@@ -331,10 +331,10 @@ Using this method, user will be able to pull / publish libraries
 3. copy the token
 4. Follow register token step from [pub.dev documentation](https://dart.dev/tools/pub/cmd/pub-token#add-a-credential-for-the-current-session).
    - Steps:
-     - run in terminal/cmd: `dart pub token add {{BASE_URL}}/v1/pub`
+     - run in terminal/cmd: `dart pub token add {{BASE_URL}}/v1/pub/`
      - enter the token copied in step 3
    - Notes:
-     - `{{BASE_URL}}` need to be changed to where this app is hosted, for example:`http://localhost:4000`, then it becomes `http://localhost:4000/v1/pub`
+     - `{{BASE_URL}}` need to be changed to where this app is hosted, for example:`http://localhost:4000`, then it becomes `http://localhost:4000/v1/pub/`
      - on windows, probably need to edit manually in `%APPDATA%/dart/pub-credentials.json` due to terminal character limit
      - On postman, this will be applied for Pub API endpoints automatically after creation
 
