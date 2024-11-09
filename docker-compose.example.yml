@@ -68,16 +68,16 @@ services:
       # if "true", will use path style, for compatibility mode such as minIO. example: https://yourendpoint/yourbucket/blablabla
       S3_PUBLIC_ENDPOINT: http://localhost:9000/
       # s3 public endpoint used for presign, if not specified, will use S3_ENDPOINT
-      S3_USE_PATH_STYLE: true
+      S3_USE_PATH_STYLE: "true"
 
       # to enable presign, value must be "true"
-      S3_ENABLE_PRESIGN: true
+      S3_ENABLE_PRESIGN: "true"
       # presign time in minute
-      S3_PRESIGN_TIME: 15
+      S3_PRESIGN_TIME: "15"
 
       # SMTP Setting
       SMTP_HOST: sandbox.smtp.mailtrap.io
-      SMTP_PORT: 2525
+      SMTP_PORT: "2525"
       SMTP_FROM_EMAIL: "no-reply@m8zn.work"
       SMTP_FROM_NAME: "No Reply"
       SMTP_USERNAME:
