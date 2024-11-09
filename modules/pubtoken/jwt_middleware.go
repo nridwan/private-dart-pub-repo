@@ -64,7 +64,7 @@ func (service *pubTokenMiddlewareImpl) HasAccess(c *fiber.Ctx) error {
 			pubToken, err = service.pubTokenService.Detail(c.UserContext(), pubTokenId, nil)
 
 			if err == nil {
-				c.Locals("write", pubToken.Write)
+				c.Locals("write", *pubToken.Write)
 				c.Locals("pub_user_id", *pubToken.UserID)
 			}
 		}
