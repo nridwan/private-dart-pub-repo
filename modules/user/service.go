@@ -344,13 +344,17 @@ func (service *userServiceImpl) RefreshToken(context context.Context, claims jwt
 	_, span := service.monitorService.StartTraceSpan(context, "UserService.RefreshToken", map[string]interface{}{})
 	defer span.End()
 
-	_, err = service.Detail(context, id)
+	user, err := service.Detail(context, id)
 
 	if err != nil {
 		return
 	}
 
-	response, err = service.jwtService.Refresh(claims)
+	response, err = service.jwtService.GenerateToken(user.ID, jwtIssuer, map[string]interface {
+	}{
+		"is_admin":  user.IsAdmin,
+		"can_write": user.CanWrite,
+	})
 	return
 }
 
