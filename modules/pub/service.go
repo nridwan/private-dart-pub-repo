@@ -86,9 +86,9 @@ func (service *pubServiceImpl) VersionList(context context.Context, packageName 
 		Select("package_name", "version", "pubspec").
 		Where("package_name = ?", packageName).
 		Order(clause.OrderBy{Columns: []clause.OrderByColumn{
-			{Column: clause.Column{Name: "version_number_major"}, Desc: true},
-			{Column: clause.Column{Name: "version_number_minor"}, Desc: true},
-			{Column: clause.Column{Name: "version_number_patch"}, Desc: true},
+			{Column: clause.Column{Name: "version_number_patch"}},
+			{Column: clause.Column{Name: "version_number_minor"}},
+			{Column: clause.Column{Name: "version_number_major"}},
 		}}).Find(&pubVersions)
 
 	if len(pubVersions) > 0 {
