@@ -1,8 +1,7 @@
 package mail
 
 import (
-	"net/smtp"
-	"strings"
+	"gopkg.in/gomail.v2"
 )
 
 type MailService interface {
@@ -12,13 +11,15 @@ type MailService interface {
 // impl `MailService` start
 
 func (service *MailModule) Send(to []string, cc []string, subject, message string) error {
-	body := "From: " + service.fromName + "\n" +
-		"To: " + strings.Join(to, ",") + "\n" +
-		"Cc: " + strings.Join(cc, ",") + "\n" +
-		"Subject: " + subject + "\n\n" +
-		message
+	mailer := gomail.NewMessage()
 
-	err := smtp.SendMail(service.address, service.auth, service.fromEmail, append(to, cc...), []byte(body))
+	mailer.SetHeader("From", service.fromEmail)
+	mailer.SetHeader("To", to...)
+	mailer.SetHeader("Cc", cc...)
+	mailer.SetHeader("Subject", subject)
+	mailer.SetBody("text/plain", message)
+
+	err := service.dialer.DialAndSend(mailer)
 	if err != nil {
 		return err
 	}

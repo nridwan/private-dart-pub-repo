@@ -1,19 +1,17 @@
 package mail
 
 import (
-	"fmt"
 	"private-pub-repo/base"
 	"private-pub-repo/modules/config"
 	"strconv"
 
-	"net/smtp"
+	"gopkg.in/gomail.v2"
 
 	"go.uber.org/fx"
 )
 
 type MailModule struct {
-	auth      smtp.Auth
-	address   string
+	dialer    *gomail.Dialer
 	fromName  string
 	fromEmail string
 }
@@ -26,13 +24,10 @@ func NewModule(config config.ConfigService) *MailModule {
 	}
 	smtpUsername := config.Getenv("SMTP_USERNAME", "")
 	smtpPassword := config.Getenv("SMTP_PASSWORD", "")
-
-	auth := smtp.PlainAuth("", smtpUsername, smtpPassword, smtpHost)
-	address := fmt.Sprintf("%s:%d", smtpHost, smtpPort)
+	dialer := gomail.NewDialer(smtpHost, smtpPort, smtpUsername, smtpPassword)
 
 	return &MailModule{
-		auth:      auth,
-		address:   address,
+		dialer:    dialer,
 		fromName:  config.Getenv("SMTP_FROM_NAME", ""),
 		fromEmail: config.Getenv("SMTP_FROM_EMAIL", ""),
 	}

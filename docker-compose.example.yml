@@ -77,6 +77,7 @@ services:
 
       # SMTP Setting
       SMTP_HOST: sandbox.smtp.mailtrap.io
+      # use port 465 for SSL mode, other port for TLS mode
       SMTP_PORT: "2525"
       SMTP_FROM_EMAIL: "no-reply@m8zn.work"
       SMTP_FROM_NAME: "No Reply"
